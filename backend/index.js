@@ -3,7 +3,6 @@ import http, { ServerResponse } from "http";
 import express from "express";
 import session from "express-session";
 import './auth.js'
-import { appendFile } from "fs";
 import passport from "passport";
 
 const hostname = "127.0.0.1"; // or 'localhost'
@@ -32,14 +31,8 @@ server.get('/google/callback',
   })
 )
 
-server.get('/auth/google', (req, res) => {
-  res.statusCode = 200; // HTTP status OK
-  res.setHeader("Content-Type", "text/plain");
-  res.send('You clicked the Google Auth link!');
-});
-
 server.get('/protected', isLoggedIn, (req,res) => { // route once logged in
-  res.send("Success");
+  res.send('<a href="/logout">LogOut</a>');
 })
 
 server.get('/auth/failure', (req,res) => { // route once logged in
@@ -48,8 +41,16 @@ server.get('/auth/failure', (req,res) => { // route once logged in
 
 server.get('/logout', (req, res, next) => {
   req.logout(function(err) {
-    if (err) return next(err);
-    req.session.destroy(() => {
+    if (err) {
+      return next(err);
+    }
+
+    req.session.destroy(function(err) {
+      if (err) {
+        return next(err);
+      }
+
+      res.clearCookie('connect.sid'); // clears the session cookie
       res.redirect('/');
     });
   });
