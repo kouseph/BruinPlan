@@ -61,7 +61,7 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
       const autocomplete = root.querySelector('#select_filter_subject');
       const autocompleteShadow = autocomplete?.shadowRoot;
       const list = autocompleteShadow.querySelector('#dropdownitems');
-      const firstItem = list.querySelector('#option-0');
+      const firstItem = list.querySelector('#option-1');
       const text = firstItem.innerText;
       firstItem.click();
       return text;
@@ -122,8 +122,13 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
 		const allRows = root.querySelectorAll('.row-fluid.data_row.primary-row.class-info');
 	  
 		return Array.from(allRows).map(row => {
-		  const rowId = row.id || '';
-		  const courseCode = rowId.split('_')[1] || '(No course code)';
+			const rowId = row.id || '';
+		  	const courseCode = rowId.split('_')[1] || '(No course code)';
+
+			const childrenId = \`\${rowId.split('_')[0]}_\${courseCode}-children\`;
+			const childrenDiv = root.querySelector('#' + CSS.escape(childrenId));
+			const disRows = childrenDiv?.querySelectorAll('.row-fluid.data_row.secondary-row.class-info') || [];
+			const hasDiscussions = disRows.length > 0;
 	  
 		  let parent = row.parentElement;
 		  let courseName = '(No course title)';
@@ -137,37 +142,4 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
 			  }
 			  break;
 			}
-			parent = parent.parentElement;
-		  }
-	  
-		  const timeColumn = row.querySelector('.timeColumn');
-		  let day = '(No day)';
-		  let time = '(No time)';
-	  
-		  if (timeColumn) {
-			const dayBtn = timeColumn.querySelector('button');
-			day = dayBtn?.getAttribute('data-content') || '(No day)';
-	  
-			const timeParagraphs = timeColumn.querySelectorAll('p');
-			time = timeParagraphs?.[1]?.innerText.replace(/\\s+/g, ' ').trim() || '(No time)';
-		  }
-	  
-		  return { courseCode, courseName, day, time };
-		});
-	  `);
-
-    // log resulting info
-    results.forEach(({ courseCode, courseName, day, time }) => {
-      console.log({
-        id: courseCode,
-        course: courseName,
-        day: day,
-        time: time,
-      });
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    await driver.quit();
-  }
-})();
+			parent = parent.paren
