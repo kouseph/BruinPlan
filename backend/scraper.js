@@ -2,7 +2,7 @@ import { Builder, By, until } from "selenium-webdriver";
 import chrome from "selenium-webdriver/chrome.js";
 
 const options = new chrome.Options();
-// options.addArguments("--headless=new"); // Optional: remove for visible browser
+options.addArguments("--headless=new"); // Optional: remove for visible browser
 
 const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
 
@@ -146,50 +146,54 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
 	if (expandBtn) expandBtn.click();
   `);
 
-    // ✅ Step 2: Wait for course rows to load
+    // Step 2: Wait until many course rows are visible
     await driver.wait(async () => {
-      return await driver.executeScript(`
+      const count = await driver.executeScript(`
 	  const app = document.querySelector('ucla-sa-soc-app');
 	  const root = app?.shadowRoot;
-	  return !!root?.querySelector('.row-fluid.data_row.primary-row.class-info.class-not-checked');
+	  const rows = root?.querySelectorAll('.row-fluid.data_row.primary-row.class-info');
+	  return rows?.length || 0;
 	`);
-    }, 10000); // wait up to 10s
+      return count > 3; // or whatever number you expect
+    }, 10000);
 
-    const courseDetails = await driver.executeScript(`
+    const results = await driver.executeScript(`
 		const app = document.querySelector('ucla-sa-soc-app');
 		const root = app?.shadowRoot;
-		const courseDivs = root?.querySelectorAll('.row-fluid.data_row.primary-row.class-info.class-not-checked');
-		if (!courseDivs || courseDivs.length === 0) return '❌ No course rows found';
+		if (!root) return '❌ Shadow root not found';
 	  
-		return Array.from(courseDivs).map(courseDiv => {
-		  const fullId = courseDiv.id || '';
-		  const courseCode = fullId.split('_')[1] || '(No course code)';
+		const allRows = root.querySelectorAll('.row-fluid.data_row.primary-row.class-info');
+		if (!allRows || allRows.length === 0) return '❌ No course section rows found';
 	  
-		  // Get day
-		  const dayDiv = document.getElementById(fullId + '-days_data');
-		  const dayBtn = dayDiv?.querySelector('button');
-		  const dayText = dayBtn?.getAttribute('data-content') || '(No day)';
+		return Array.from(allRows).map(row => {
+		  const rowId = row.id || '';
+		  const courseCode = rowId.split('_')[1] || '(No course code)';
 	  
-		  // Get time
-		  const timeDiv = document.getElementById(fullId + '-time_data');
-		  const timeP = timeDiv?.querySelector('p');
-		  const timeText = timeP ? timeP.innerText.replace(/\\s+/g, ' ').trim() : '(No time)';
+		  const timeColumn = row.querySelector('.timeColumn');
+		  let day = '(No day)';
+		  let time = '(No time)';
 	  
-		  return { courseCode, day: dayText, time: timeText };
+		  if (timeColumn) {
+			const dayBtn = timeColumn.querySelector('button');
+			day = dayBtn?.getAttribute('data-content') || '(No day)';
+	  
+			const timeParagraphs = timeColumn.querySelectorAll('p');
+			time = timeParagraphs?.[1]?.innerText.replace(/\\s+/g, ' ').trim() || '(No time)';
+		  }
+	  
+		  return { courseCode, day, time };
 		});
 	  `);
 
-    if (typeof courseDetails === "string" && courseDetails.startsWith("❌")) {
-      console.error("Browser context error:", courseDetails);
+    if (typeof results === "string" && results.startsWith("❌")) {
+      console.error("Browser context error:", results);
     } else {
-      console.log("📅 Course Schedule:");
-      courseDetails.forEach(({ courseCode, day, time }) => {
+      console.log("📅 Day + Time info from .timeColumn:");
+      results.forEach(({ courseCode, day, time }) => {
         console.log(`${courseCode}: ${day} @ ${time}`);
       });
     }
   } catch (err) {
     console.error("❌ Error interacting with shadow DOM:", err);
   } finally {
-    await driver.quit();
-  }
-})();
+    a
