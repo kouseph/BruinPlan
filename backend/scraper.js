@@ -115,20 +115,19 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
       return false;
     }, 10000);
 
-    // get info for each course
     const results = await driver.executeScript(`
 		const app = document.querySelector('ucla-sa-soc-app');
 		const root = app?.shadowRoot;
 		const allRows = root.querySelectorAll('.row-fluid.data_row.primary-row.class-info');
 	  
 		return Array.from(allRows).map(row => {
-			const rowId = row.id || '';
-		  	const courseCode = rowId.split('_')[1] || '(No course code)';
-
-			const childrenId = \`\${rowId.split('_')[0]}_\${courseCode}-children\`;
-			const childrenDiv = root.querySelector('#' + CSS.escape(childrenId));
-			const disRows = childrenDiv?.querySelectorAll('.row-fluid.data_row.secondary-row.class-info') || [];
-			const hasDiscussions = disRows.length > 0;
+		  const rowId = row.id || '';
+		  const courseCode = rowId.split('_')[1] || '(No course code)';
+	  
+		  const childrenId = \`\${rowId.split('_')[0]}_\${courseCode}-children\`;
+		  const childrenDiv = root.querySelector('#' + CSS.escape(childrenId));
+		  const disRows = childrenDiv?.querySelectorAll('.row-fluid.data_row.secondary-row.class-info') || [];
+		  const hasDiscussions = disRows.length > 0;
 	  
 		  let parent = row.parentElement;
 		  let courseName = '(No course title)';
@@ -142,4 +141,7 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
 			  }
 			  break;
 			}
-			parent = parent.paren
+			parent = parent.parentElement;
+		  }
+	  
+		  c
