@@ -121,27 +121,105 @@ const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
 		const allRows = root.querySelectorAll('.row-fluid.data_row.primary-row.class-info');
 	  
 		return Array.from(allRows).map(row => {
-		  const rowId = row.id || '';
-		  const courseCode = rowId.split('_')[1] || '(No course code)';
-	  
-		  const childrenId = \`\${rowId.split('_')[0]}_\${courseCode}-children\`;
-		  const childrenDiv = root.querySelector('#' + CSS.escape(childrenId));
-		  const disRows = childrenDiv?.querySelectorAll('.row-fluid.data_row.secondary-row.class-info') || [];
-		  const hasDiscussions = disRows.length > 0;
-	  
-		  let parent = row.parentElement;
-		  let courseName = '(No course title)';
-		  
-		  while (parent) {
-			const head = parent.querySelector('h3.head');
-			if (head) {
-			  const button = head.querySelector('button.linkLikeButton');
-			  if (button) {
-				courseName = button.innerText.trim();
-			  }
-			  break;
-			}
-			parent = parent.parentElement;
-		  }
-	  
-		  c
+  const rowId = row.id || '';
+  const courseCode = rowId.split('_')[1] || '(No course code)';
+
+  const childrenId = \`\${rowId.split('_')[0]}_\${courseCode}-children\`;
+  const childrenDiv = root.querySelector('#' + CSS.escape(childrenId));
+  const disRows = childrenDiv?.querySelectorAll('.row-fluid.data_row.secondary-row.class-info') || [];
+  const hasDiscussions = disRows.length > 0;
+
+  let parent = row.parentElement;
+  let courseName = '(No course title)';
+
+  while (parent) {
+    const head = parent.querySelector('h3.head');
+    if (head) {
+      const button = head.querySelector('button.linkLikeButton');
+      if (button) {
+        courseName = button.innerText.trim();
+      }
+      break;
+    }
+    parent = parent.parentElement;
+  }
+
+  const timeColumn = row.querySelector('.timeColumn');
+  let day = '(No day)';
+  let time = '(No time)';
+  if (timeColumn) {
+    const dayBtn = timeColumn.querySelector('button');
+    day = dayBtn?.getAttribute('data-content') || '(No day)';
+    const timeParagraphs = timeColumn.querySelectorAll('p');
+    time = timeParagraphs?.[1]?.innerText.replace(/\\s+/g, ' ').trim() || '(No time)';
+  }
+
+  const sectionAnchor = row.querySelector('.sectionColumn a');
+  const section = sectionAnchor?.innerText.trim() || '(No section)';
+
+  const instructorColumn = row.querySelector('.instructorColumn p');
+  const instructor = instructorColumn?.innerText.trim() || '(No instructor)';
+
+  const discussions = Array.from(disRows).map(dRow => {
+    const dTimeColumn = dRow.querySelector('.timeColumn');
+    let dDay = '(No day)';
+    let dTime = '(No time)';
+    if (dTimeColumn) {
+      const dDayBtn = dTimeColumn.querySelector('button');
+      dDay = dDayBtn?.getAttribute('data-content') || '(No day)';
+      const dTimeParagraphs = dTimeColumn.querySelectorAll('p');
+      dTime = dTimeParagraphs?.[1]?.innerText.replace(/\\s+/g, ' ').trim() || '(No time)';
+    }
+
+    const dSectionAnchor = dRow.querySelector('.sectionColumn a');
+    const dSection = dSectionAnchor?.innerText.trim() || '(No section)';
+
+    const dInstructorColumn = dRow.querySelector('.instructorColumn p');
+    const dInstructor = dInstructorColumn?.innerText.trim() || '(No instructor)';
+
+    return { day: dDay, time: dTime, section: dSection, instructor: dInstructor };
+  });
+
+  return {
+    courseCode,
+    courseName,
+    section,
+    day,
+    time,
+    instructor,
+    hasDiscussions,
+    discussions
+  };
+});
+
+	  `);
+
+    results.forEach(
+      ({
+        courseCode,
+        courseName,
+        day,
+        time,
+        section,
+        instructor,
+        hasDiscussions,
+        discussions,
+      }) => {
+        console.log({
+          id: courseCode,
+          course: courseName,
+          section,
+          instructor, // 🆕 add this to the output
+          day,
+          time,
+          dis: hasDiscussions,
+          discussions,
+        });
+      }
+    );
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await driver.quit();
+  }
+})();
