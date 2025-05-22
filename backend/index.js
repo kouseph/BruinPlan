@@ -1,13 +1,16 @@
-// index.js
 import http, { ServerResponse } from "http";
 import express from "express";
 import session from "express-session";
-import './auth.js'
-import passport from "passport";
+import connectDB from './config/db.js';
+import './config/auth.js'; // sets up Google Oauth
+import passport from 'passport';
 
 const hostname = "127.0.0.1"; // or 'localhost'
 const port = 3000;
 const server = express();
+
+
+connectDB(); //connect to DB 
 
 server.use(session({secret: process.env.SECRET})); 
 server.use(passport.initialize());
