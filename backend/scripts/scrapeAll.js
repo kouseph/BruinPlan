@@ -19,7 +19,7 @@ await connectDB(); // Establish DB connection before running your script
 (async function runAllSubjects() {
   await connectDB();
 
-  for (let i = 0; i <= 187; i++) {
+  for (let i = 61; i <= 187; i++) {
     try {
       const curr = await scrapeSubject(i);
       console.log(`Scraped subject index ${i}:`, curr.length, "courses");
