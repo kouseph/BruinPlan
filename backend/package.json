@@ -9,10 +9,10 @@
   },
   "author": "",
   "license": "ISC",
-    "devDependencies": {
+  "devDependencies": {
+    "chromedriver": "^136.0.3",
     "nodemon": "^3.1.10"
   },
-  
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
@@ -23,5 +23,4 @@
     "passport-google-oauth2": "^0.2.0",
     "selenium-webdriver": "^4.32.0"
   }
-
 }

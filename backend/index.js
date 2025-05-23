@@ -2,7 +2,7 @@ import http, { ServerResponse } from "http";
 import express from "express";
 import session from "express-session";
 import connectDB from './config/db.js';
-import './config/auth.js'; // sets up Google Oauth
+import './config/auth.js'; 
 import passport from 'passport';
 import course from './models/course.js';
 
@@ -11,15 +11,7 @@ const port = 3000;
 const server = express();
 
 //connects to db then populates the db with courses
-connectDB().then(async () => {
-  const testCourse = new course({
-    name: 'Test Course',
-    time: '12:00 PM - 1:15 PM',
-  });
-
-  await testCourse.save();
-  console.log('✅ Test course inserted into DB');
-});
+connectDB();
 
 
 //intializes session for server 
@@ -39,7 +31,7 @@ server.get('/auth/google',
   passport.authenticate('google', { scope: ['email','profile']})
 )
 
-server.get('/google/callback',
+server.get('/google/callback', // starting route to authenticate
   passport.authenticate('google',{
     successRedirect: '/protected',
     failureRedirect: '/auth/failure',
@@ -50,11 +42,11 @@ server.get('/protected', isLoggedIn, (req,res) => { // route once logged in
   res.send('<a href="/logout">LogOut</a>');
 })
 
-server.get('/auth/failure', (req,res) => { // route once logged in
+server.get('/auth/failure', (req,res) => { // route failure
   res.send("Something Went Wrong");
 })
 
-server.get('/logout', (req, res, next) => {
+server.get('/logout', (req, res, next) => { //route to log out
   req.logout(function(err) {
     if (err) {
       return next(err);
