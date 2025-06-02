@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   schedules: [
     {
       type: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
       }],
       default: []
