@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
 
 // Pre-save hook to ensure uniqueness of *courses* within each individual schedule.
 // A course should appear at most once per schedule. The discussion index is associated.
-userSchemaInstance.pre('save', function(next) {
+userSchema.pre('save', function(next) {
     if (this.isModified('schedules')) {
         this.schedules = this.schedules.map(scheduleItems => {
             if (!Array.isArray(scheduleItems)) {
