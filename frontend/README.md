@@ -1,70 +1,21 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+0000000000000000000000000000000000000000 4e63a2da8548c0ab5ebd453e6f6db2d4c0dc1d0a emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1746734927 -0700	clone: from https://github.com/kouseph/BruinPlan.git
+4e63a2da8548c0ab5ebd453e6f6db2d4c0dc1d0a c3c4f06f5531945a6a499f726a18b5848d2c93a1 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1746735870 -0700	commit: simple node server setup
+c3c4f06f5531945a6a499f726a18b5848d2c93a1 9aa90ea130c46cca5ae9f22b44abbcef12a61d56 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1746736308 -0700	pull: Fast-forward
+9aa90ea130c46cca5ae9f22b44abbcef12a61d56 c36701669772d58819fc51a622b1c5ebfa54711b emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747413723 -0700	pull: Fast-forward
+c36701669772d58819fc51a622b1c5ebfa54711b c36701669772d58819fc51a622b1c5ebfa54711b emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747413772 -0700	reset: moving to HEAD
+c36701669772d58819fc51a622b1c5ebfa54711b c36701669772d58819fc51a622b1c5ebfa54711b emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747414153 -0700	checkout: moving from main to ez-back
+c36701669772d58819fc51a622b1c5ebfa54711b 0223f3cf4be0ce45a7dc349027b513ea3482c540 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747416671 -0700	commit: boilerplate web scraper code with selenium
+0223f3cf4be0ce45a7dc349027b513ea3482c540 05b75f821df1eb101afb87e760d2069287cd7eb6 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747533435 -0700	commit: able to navigate to SOC, select S25 term, select first subject, and log each course for selected subject
+05b75f821df1eb101afb87e760d2069287cd7eb6 91d67fe60c960876738958ba8b749a7b15a9fe7a emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747691366 -0700	checkout: moving from ez-back to Mongo
+91d67fe60c960876738958ba8b749a7b15a9fe7a 91d67fe60c960876738958ba8b749a7b15a9fe7a emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747694187 -0700	checkout: moving from Mongo to ez-db
+91d67fe60c960876738958ba8b749a7b15a9fe7a 05b75f821df1eb101afb87e760d2069287cd7eb6 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747694392 -0700	checkout: moving from ez-db to ez-back
+05b75f821df1eb101afb87e760d2069287cd7eb6 99959b69e25305e84957d29e360be0f4d15ea7a0 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747694585 -0700	commit: full scraper code
+99959b69e25305e84957d29e360be0f4d15ea7a0 99959b69e25305e84957d29e360be0f4d15ea7a0 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747696471 -0700	reset: moving to HEAD
+99959b69e25305e84957d29e360be0f4d15ea7a0 e3edf96155e6f22d723987afef091024193914a6 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747771987 -0700	commit: able to get time and day data for all courses of a first subject
+e3edf96155e6f22d723987afef091024193914a6 fb5b23b35b3da6bb181b5bf9a04951ccf251e56f emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747777282 -0700	commit: log course name as well
+fb5b23b35b3da6bb181b5bf9a04951ccf251e56f 9193121c668c6928266f9249635d33a55093f923 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747785190 -0700	commit: handles discussion section day and times
+9193121c668c6928266f9249635d33a55093f923 073d10c9af1f7c5683d0469658aac68710ceef70 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747785777 -0700	commit: added course/dis section name
+073d10c9af1f7c5683d0469658aac68710ceef70 2458106e882e45e48aef2ba8cbb1b417cd18d8b0 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747786263 -0700	commit: includes instructor name for each lec and discussion sections
+2458106e882e45e48aef2ba8cbb1b417cd18d8b0 c0d62e26f5f6d64ab159679df0dabb3bdeea3498 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747787738 -0700	commit: cleanup logged json object
+c0d62e26f5f6d64ab159679df0dabb3bdeea3498 b8f512c73a55c7a1b8262c068fa016c930421d26 emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1747950838 -0700	commit: finalized scraping every subject
+b8f512c73a55c7a1b8262c068fa016c930421d26 c36701669772d58819fc51a622b1c5ebfa54711b emilyzhang625 <139720917+emilyzhang625@users.noreply.github.com> 1748836128 -0700	checkout: moving from ez-back to main
