@@ -1,10 +1,12 @@
 // scrapeSubject.js
 import { Builder, By, until } from "selenium-webdriver";
-import chrome from "selenium-webdriver/chrome.js";
+import { Options, ServiceBuilder } from "selenium-webdriver/chrome.js";
+import chromedriver from "chromedriver";
 
 export default async function scrapeSubject(optionIndex = 0) {
-  const options = new chrome.Options();
-  const service = new chrome.ServiceBuilder("/usr/local/bin/chromedriver");
+  const service = new ServiceBuilder(chromedriver.path);
+  const options = new Options();
+  
 
   const driver = await new Builder()
     .forBrowser("chrome")
