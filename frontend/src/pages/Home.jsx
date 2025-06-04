@@ -1,19 +1,19 @@
 // src/pages/Home.jsx
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import '../App.css';
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
+import "../App.css";
 
 export default function Home() {
   const navigate = useNavigate();
 
   function onClickLogin() {
-    navigate('/login');
+    navigate("/login");
   }
 
   return (
     <div className="container">
       {/* “BruinPlan” title now links to "/" */}
-      <Link to="/" style={{ textDecoration: 'none' }}>
+      <Link to="/" style={{ textDecoration: "none" }}>
         <h1 className="title">BruinPlan</h1>
       </Link>
 
@@ -41,7 +41,7 @@ export default function Home() {
       </div>
 
       {/* “PLAN” button links to "/homesched" */}
-      <Link to="/homesched" style={{ textDecoration: 'none' }}>
+      <Link to="/homesched" style={{ textDecoration: "none" }}>
         <button className="plan-button">PLAN</button>
       </Link>
     </div>

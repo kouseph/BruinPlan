@@ -1,21 +1,23 @@
 /* src/pages/HomeSched.css */
+@import '../theme.css';
 
 /* Root container covers full viewport */
 .homesched-container {
   position: relative;
   font-family: 'Inter', sans-serif;
-  background: #ffffff;
+  background: var(--bg-gradient);
   min-height: 100vh;
   padding: 20px 40px; /* top/bottom 20px, left/right 40px */
 }
 
-/* “BruinPlan” title (top-left) */
+/* "BruinPlan" title (top-left) */
 .homesched-title {
-  color: #487EC4;
+  color: var(--white);
   font-size: 72px;
   font-weight: 700;
   margin-left: -100px;
   margin-top: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Main content wrapper: rectangle + arrow button */
@@ -27,46 +29,70 @@
   position: relative; /* for absolute positioning of arrow */
 }
 
-/* Large gray rectangle placeholder */
+/* Large rectangle placeholder */
 .homesched-rect {
   width: 800px;   /* adjust width if needed */
   height: 400px;  /* adjust height if needed */
-  background: #e0e0e0;
-  border: 1px solid #888;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
+}
+
+.homesched-rect:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Circular right‐arrow button */
 .homesched-arrow-btn {
   position: absolute;
   right: -150px;
-  background: #a39c99;
+  background: var(--dark-yellow);
   border: none;
   width: 60px;
   height: 60px;
   font-size: 32px;
-  color: #000;
+  color: var(--black);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
 }
 
-/* “SAVE” button at the bottom center */
+.homesched-arrow-btn:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+/* "SAVE" button at the bottom center */
 .homesched-save-button {
   position: absolute;
   bottom: 70px;    /* 40px up from bottom of viewport */
   left: 50%;
   transform: translateX(-50%);
-  background: #F7CB47;
+  background: var(--dark-yellow);
   border: none;
-  border-radius: 50px;
+  border-radius: var(--border-radius-xl);
   padding: 25px 60px;
   font-size: 24px;
   font-weight: 700;
-  color: #fff;
+  color: var(--black);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.homesched-save-button:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
+  box-shadow: var(--shadow-lg);
+  transform: translate(-50%, -2px);
 }
