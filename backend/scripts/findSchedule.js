@@ -134,8 +134,14 @@ function calculateTotalGap(schedule) {
 
   for (const item of schedule) {
     if (!item.timeValid || item.day === "---") continue;
-    if (!dayGroups[item.day]) dayGroups[item.day] = [];
-    dayGroups[item.day].push(item);
+
+    // Split multiple days like "Tuesday, Thursday"
+    const days = item.day.split(",").map((d) => d.trim());
+
+    for (const day of days) {
+      if (!dayGroups[day]) dayGroups[day] = [];
+      dayGroups[day].push({ ...item, day }); // keep a copy for each day
+    }
   }
 
   let totalGap = 0;
@@ -224,6 +230,21 @@ function prettyPrint(schedule) {
     console.log(`     Time: ${finalTime}`);
     console.log("");
   }
+}
+
+function findAllOptimizedSchedules(courses) {
+  const allSchedules = generateAllSchedules(courses);
+  const validSchedules = allSchedules.filter(isValidSchedule);
+
+  if (validSchedules.length === 0) {
+    return []; // or return a message if you prefer
+  }
+
+  validSchedules.sort((a, b) => {
+    return calculateTotalGap(a.schedule) - calculateTotalGap(b.schedule);
+  });
+
+  return validSchedules.map((sched) => sched.schedule);
 }
 
 const courses = [
@@ -327,5 +348,20 @@ const courses = [
   },
 ];
 
-const result = findOptimizedSchedule(courses);
-prettyPrint(result);
+const allValidSortedSchedules = findAllOptimizedSchedules(courses);
+
+// To preview all of them nicely
+if (allValidSortedSchedules.length === 0) {
+  console.log(
+    "❌ No valid schedule: lectures, discussions, or final exams conflict."
+  );
+} else {
+  allValidSortedSchedules.forEach((schedule, idx) => {
+    console.log(
+      `\n🔢 Schedule #${idx + 1} (Total Gap: ${calculateTotalGap(
+        schedule
+      )} hrs):`
+    );
+    prettyPrint(schedule);
+  });
+}
