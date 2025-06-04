@@ -1,88 +1,144 @@
 /* src/pages/HomeSched.css */
 @import '../theme.css';
 
-/* Root container covers full viewport */
-.homesched-container {
+/* Container & Typography */
+.schedules-container {
   position: relative;
   font-family: 'Inter', sans-serif;
   background: var(--bg-gradient);
   min-height: 100vh;
-  padding: 20px 40px; /* top/bottom 20px, left/right 40px */
+  padding: 20px 40px;
 }
 
-/* "BruinPlan" title (top-left) */
-.homesched-title {
+/* "BruinPlan" title */
+.schedules-title {
   color: var(--white);
   font-size: 72px;
   font-weight: 700;
-  margin-left: -100px;
-  margin-top: 10px;
+  margin: 0;
+  margin-bottom: 40px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Main content wrapper: rectangle + arrow button */
-.homesched-main {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 60px; /* space between title and rectangle */
-  position: relative; /* for absolute positioning of arrow */
-}
-
-/* Large rectangle placeholder */
-.homesched-rect {
-  width: 800px;   /* adjust width if needed */
-  height: 400px;  /* adjust height if needed */
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid var(--grey);
+/* Timetable Grid Layout */
+.timetable-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 60px repeat(5, 1fr);
+  grid-template-rows: repeat(14, 50px);
+  gap: 1px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: var(--border-radius-lg);
+  overflow: hidden;
   box-shadow: var(--shadow-md);
-  transition: all var(--transition-fast);
+  border: 1px solid var(--grey);
   backdrop-filter: blur(10px);
 }
 
-.homesched-rect:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Circular right‐arrow button */
-.homesched-arrow-btn {
-  position: absolute;
-  right: -150px;
+/* Header Cells */
+.grid-header {
   background: var(--dark-yellow);
-  border: none;
-  width: 60px;
-  height: 60px;
-  font-size: 32px;
   color: var(--black);
-  border-radius: 50%;
-  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
+}
+
+.empty-cell {
+  background: var(--dark-yellow);
+}
+
+/* Time labels */
+.time-label {
+  background: rgba(255, 224, 163, 0.1);
+  color: var(--light-yellow);
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--grey);
+}
+
+/* Empty cells */
+.grid-cell {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--grey);
+  border-right: 1px solid var(--grey);
   transition: all var(--transition-fast);
 }
 
-.homesched-arrow-btn:hover {
-  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+.grid-cell:hover {
+  background: rgba(255, 224, 163, 0.1);
 }
 
-/* "SAVE" button at the bottom center */
-.homesched-save-button {
+/* Individual Event Block */
+.event-block {
+  padding: 6px 8px;
+  border-radius: var(--border-radius-sm);
+  color: var(--black);
+  font-size: 12px;
+  line-height: 1.2;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.event-block:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
+}
+
+/* Lecture blocks */
+.event-block.lecture {
+  background: var(--dark-yellow);
+  border: 1px solid var(--light-yellow);
+}
+
+/* Discussion blocks */
+.event-block.discussion {
+  background: var(--light-blue);
+  border: 1px solid var(--white);
+  color: var(--white);
+}
+
+/* Inside each event-block */
+.event-course {
+  font-weight: 700;
+  margin-bottom: 2px;
+  font-size: 13px;
+  color: inherit;
+}
+
+.event-section {
+  font-weight: 500;
+  margin-bottom: 2px;
+  font-size: 12px;
+  color: inherit;
+}
+
+/* Save button */
+.schedules-save-button {
   position: absolute;
-  bottom: 70px;    /* 40px up from bottom of viewport */
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   background: var(--dark-yellow);
   border: none;
   border-radius: var(--border-radius-xl);
-  padding: 25px 60px;
+  padding: 23px 50px;
   font-size: 24px;
   font-weight: 700;
   color: var(--black);
@@ -91,8 +147,8 @@
   transition: all var(--transition-fast);
 }
 
-.homesched-save-button:hover {
+.schedules-save-button:hover {
   background: color-mix(in srgb, var(--dark-yellow) 90%, white);
-  box-shadow: var(--shadow-lg);
   transform: translate(-50%, -2px);
+  box-shadow: var(--shadow-lg);
 }

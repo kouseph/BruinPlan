@@ -7,7 +7,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   const handlePlanClick = () => {
-    navigate('/homesched', { state: { from: 'dashboard' } });
+    navigate('/schedules', { state: { from: 'dashboard' } });
   };
 
   return (

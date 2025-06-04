@@ -109,9 +109,9 @@
 /* Circular right-arrow button */
 .schedules-arrow-btn {
   position: absolute;
-  margin-top: -350px;
-  margin-right: -450px;
-  right: calc(50% - 400px + 20px);
+  top: 50%;  /* Center vertically */
+  transform: translateY(-50%);  /* Adjust for perfect vertical centering */
+  left: calc(50% + 520px);  /* Position relative to center of page */
   background: var(--dark-yellow);
   border: none;
   width: 60px;
@@ -129,7 +129,7 @@
 
 .schedules-arrow-btn:hover {
   background: color-mix(in srgb, var(--dark-yellow) 90%, white);
-  transform: translateX(2px);
+  transform: translateY(-50%) translateX(2px);  /* Keep vertical centering while adding hover effect */
   box-shadow: var(--shadow-lg);
 }
 
@@ -210,6 +210,7 @@
 /*   Timetable Grid Layout         */
 /* ================================ */
 .timetable-grid {
+  position: relative;
   display: grid;
   /* 6 columns: [ time-label ] + Monday–Friday */
   grid-template-columns:
@@ -219,7 +220,7 @@
   grid-template-rows: repeat(14, 50px);
   gap: 1px; /* grid gaps become thin gray lines */
   width: 100%;
-  max-width: 1300px;
+  max-width: 1000px;  /* Reduced from 1300px to leave room for the button */
   margin: 0 auto;
   margin-top: 30px;
   background: rgba(255, 255, 255, 0.05);

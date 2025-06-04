@@ -230,15 +230,16 @@ export default function Schedules() {
               </div>
             );
           });
-        })}
+        }).flat()}
       </div>
 
+      {/* Next schedule button */}
       <button
-          className="schedules-arrow-btn"
-          onClick={() => alert('Next schedule clicked')}
-        >
-          &rarr;
-        </button>
+        className="schedules-arrow-btn"
+        onClick={() => alert('Next schedule clicked')}
+      >
+        &rarr;
+      </button>
 
       {/* "SAVE" button */}
       <button className="schedules-save-button" onClick={handleSaveClick}>
