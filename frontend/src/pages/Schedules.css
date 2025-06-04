@@ -1,4 +1,5 @@
 /* src/pages/Schedules.css */
+@import '../theme.css';
 
 /* ---------------------- */
 /* Container & Typography */
@@ -6,36 +7,45 @@
 .schedules-container {
   position: relative;
   font-family: 'Inter', sans-serif;
-  background: #ffffff;
+  background: var(--bg-gradient);
   min-height: 100vh;
   padding: 20px 40px;
 }
 
 /* "BruinPlan" title (top-left) */
 .schedules-title {
-  color: #487EC4;
+  color: var(--white);
   font-size: 72px;
   font-weight: 700;
   margin: 0;
   margin-left: -200px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Small gray circle with right arrow on left side */
+/* Small circle with right arrow on left side */
 .left-arrow-btn {
   position: absolute;
   top: 30px;
   left: 20px;
   width: 32px;
   height: 32px;
-  background: #ccc;
+  background: var(--dark-yellow);
   border: none;
   border-radius: 50%;
-  color: #000;
+  color: var(--black);
   font-size: 16px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.left-arrow-btn:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
+  transform: translateX(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 /* Profile icon wrapper (top-right) */
@@ -50,6 +60,15 @@
   width: 50px;
   height: 50px;
   cursor: pointer;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  background: var(--dark-yellow);
+}
+
+.schedules-profile-icon:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
 }
 
 /* Profile popup menu */
@@ -57,29 +76,34 @@
   position: absolute;
   top: 60px;
   right: 0;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
   min-width: 160px;
   z-index: 100;
   display: flex;
   flex-direction: column;
   padding: 8px 0;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
+
 .profile-popup-menu button {
   background: none;
   border: none;
   text-align: left;
   padding: 10px 20px;
   font-size: 15px;
-  color: #222;
+  color: var(--white);
   cursor: pointer;
   width: 100%;
-  transition: background 0.2s;
+  transition: all var(--transition-fast);
 }
+
 .profile-popup-menu button:hover {
-  background: #f5f5f5;
+  background: rgba(255, 224, 163, 0.1);
+  color: var(--light-yellow);
 }
 
 /* Circular right-arrow button */
@@ -87,25 +111,27 @@
   position: absolute;
   margin-top: -350px;
   margin-right: -450px;
-  /* Place it just outside the rectangle’s right edge */
   right: calc(50% - 400px + 20px);
-  /* Explanation: rectangle is 800px wide (half is 400px). 
-     “right: calc(50% - 400px + 20px)” shifts arrow 20px right of rectangle edge.
-     Tweak “20px” as needed if you want arrow closer/farther. */
-  background: #a39c99;
+  background: var(--dark-yellow);
   border: none;
   width: 60px;
   height: 60px;
   font-size: 32px;
-  color: #000;
+  color: var(--black);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
 }
 
+.schedules-arrow-btn:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
+  transform: translateX(2px);
+  box-shadow: var(--shadow-lg);
+}
 
 /* "SAVE" button (bottom-center) */
 .schedules-save-button {
@@ -113,15 +139,22 @@
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  background: #F7CB47;
+  background: var(--dark-yellow);
   border: none;
-  border-radius: 50px;
+  border-radius: var(--border-radius-xl);
   padding: 23px 50px;
   font-size: 24px;
   font-weight: 700;
-  color: #fff;
+  color: var(--black);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.schedules-save-button:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
+  transform: translate(-50%, -2px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ------------------------------------- */
@@ -131,14 +164,27 @@
   position: fixed;    /* fixed at top-right of viewport */
   top: 20px;
   right: 20px;
-  background: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   padding: 10px 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .schedules-toast-icon {
@@ -146,6 +192,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--light-yellow);
 }
 
 .schedules-toast-icon svg {
@@ -155,7 +202,7 @@
 
 .schedules-toast-text {
   font-size: 16px;
-  color: #000;
+  color: var(--white);
   font-weight: 500;
 }
 
@@ -175,17 +222,20 @@
   max-width: 1300px;
   margin: 0 auto;
   margin-top: 30px;
-  background: #ddd; /* grid gap color */
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--grey);
+  backdrop-filter: blur(10px);
 }
 
 /* ----------- */
 /* Header Cells */
 /* ----------- */
 .grid-header {
-  background: #2E67C9;
-  color: #fff;
+  background: var(--dark-yellow);
+  color: var(--black);
   font-weight: 600;
   font-size: 14px;
   display: flex;
@@ -194,39 +244,44 @@
 }
 
 .empty-cell {
-  background: #2E67C9; /* top-left blank cell matches header */
+  background: var(--dark-yellow);
 }
 
 /* ----------------------------------- */
 /* Time labels (col 1, rows 1–14)      */
 /* ----------------------------------- */
 .time-label {
-  background: #f9f9f9;
-  color: #666;
+  background: rgba(255, 224, 163, 0.1);
+  color: var(--light-yellow);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;     /* vertical centering */
   justify-content: center; /* horizontal centering */
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--grey);
 }
 
 /* ----------------------------------- */
 /* Empty cells (all grid slots)        */
 /* ----------------------------------- */
 .grid-cell {
-  background: #fff;
-  border-bottom: 1px solid #eee;
-  border-right: 1px solid #eee;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--grey);
+  border-right: 1px solid var(--grey);
+  transition: all var(--transition-fast);
+}
+
+.grid-cell:hover {
+  background: rgba(255, 224, 163, 0.1);
 }
 
 /* --------------------- */
 /* Individual Event Block */
 /* --------------------- */
 .event-block {
-  padding: 3px 4px;
-  border-radius: 4px;
-  color: #000;
+  padding: 6px 8px;
+  border-radius: var(--border-radius-sm);
+  color: var(--black);
   font-size: 12px;
   line-height: 1.2;
   overflow: hidden;
@@ -236,18 +291,26 @@
   text-align: center;
   white-space: normal;     /* allow text wrapping */
   word-wrap: break-word;   /* break long words if needed */
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.event-block:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-md);
 }
 
 /* Lecture blocks: pale peach */
 .event-block.lecture {
-  background: #FFEFE0;
-  border: 1px solid #DDA76F;
+  background: var(--dark-yellow);
+  border: 1px solid var(--light-yellow);
 }
 
 /* Discussion blocks: pale lavender */
 .event-block.discussion {
-  background: #E8E8FF;
-  border: 1px solid #7F7FFF;
+  background: var(--light-blue);
+  border: 1px solid var(--white);
+  color: var(--white);
 }
 
 /* Inside each event-block */
@@ -255,9 +318,11 @@
   font-weight: 700;
   margin-bottom: 2px;
   font-size: 13px;
+  color: inherit;
 }
 .event-section {
   font-weight: 500;
   margin-bottom: 2px;
   font-size: 12px;
+  color: inherit;
 }
