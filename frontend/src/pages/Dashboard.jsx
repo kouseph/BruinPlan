@@ -1,41 +1,30 @@
 // src/pages/Dashboard.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Dashboard.css';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../App.css";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
+  const handlePlanClick = () => {
+    navigate('/schedules', { state: { from: 'dashboard' } });
+  };
+
   return (
-    <div className="dashboard-container">
-      {/* Profile icon (links to /profile) */}
-      <Link to="/profile">
-        <img
-          className="dashboard-profile-icon"
-          src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png"
-          alt="Profile"
-        />
+    <div className="container">
+      {/* "BruinPlan" title now links to "/" */}
+      <Link to="/" style={{ textDecoration: "none" }}>
+        <h1 className="title">BruinPlan</h1>
       </Link>
 
-      {/* Title */}
-      <h1 className="dashboard-title">BruinPlan</h1>
-
-      {/* Input fields */}
-      <div className="dashboard-input-group">
-        <input
-          type="text"
-          placeholder="Enter Subject Area"
-          className="dashboard-input"
-        />
-        <input
-          type="text"
-          placeholder="Enter Class Title"
-          className="dashboard-input"
-        />
+      <div className="input-group">
+        <input type="text" placeholder="Enter Subject Area" />
+        <input type="text" placeholder="Enter Class Title" />
       </div>
 
-      {/* Selected Classes table */}
-      <div className="dashboard-selected-classes">
+      <div className="selected-classes">
         <h2>Selected Classes</h2>
-        <table className="dashboard-table">
+        <table>
           <tbody>
             {[...Array(4)].map((_, idx) => (
               <tr key={idx}>
@@ -46,10 +35,10 @@ export default function Dashboard() {
         </table>
       </div>
 
-      {/* “PLAN” button now wrapped in Link → "/schedules" */}
-      <Link to="/schedules" style={{ textDecoration: 'none' }}>
-        <button className="dashboard-plan-button">PLAN</button>
-      </Link>
+      {/* "PLAN" button now uses onClick handler instead of Link */}
+      <button className="plan-button" onClick={handlePlanClick}>
+        PLAN
+      </button>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import express from 'express';
 import { generateSchedules, saveOptimizedSchedule } from '../services/schedule.service.js';
 import { deleteUserSchedule } from '../services/user.service.js';
 import { isAuthenticated } from '../components/auth.middleware.js';
+import User from '../models/user.js';
 
 const router = express.Router();
 
@@ -49,12 +50,51 @@ router.post('/api/schedule/optimize', isAuthenticated, async (req, res) => {
 router.post('/api/schedules', isAuthenticated, async (req, res) => {
   try {
     const { schedule } = req.body;
-    const schedules = await saveOptimizedSchedule(req.user.googleId, schedule);
+    console.log('Received schedule data:', JSON.stringify(schedule, null, 2));
+    
+    // Validate schedule format
+    if (!Array.isArray(schedule)) {
+      return res.status(400).json({ 
+        message: 'Schedule must be an array' 
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({ googleId: req.user.googleId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Ensure schedules is initialized as an array
+    if (!Array.isArray(user.schedules)) {
+      user.schedules = [];
+    }
+
+    // Directly set the schedule as a new element in the schedules array
+    const scheduleData = schedule.map(item => ({
+      day: item.day,
+      timeValid: item.timeValid,
+      start: item.start,
+      end: item.end,
+      type: item.type,
+      course: item.course,
+      section: item.section,
+      timeStr: item.timeStr
+    }));
+
+    user.schedules.push(scheduleData);
+    console.log('About to save schedule:', JSON.stringify(scheduleData, null, 2));
+
+    // Save with validation
+    const savedUser = await user.save();
+    console.log('Saved user schedules:', JSON.stringify(savedUser.schedules, null, 2));
+
     res.status(201).json({ 
-      message: 'Schedule saved', 
-      schedules 
+      message: 'Schedule saved successfully',
+      schedules: savedUser.schedules
     });
   } catch (error) {
+    console.error('Save schedule error:', error);
     res.status(500).json({ 
       message: 'Error saving schedule', 
       error: error.message 

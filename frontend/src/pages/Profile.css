@@ -1,25 +1,94 @@
 /* src/pages/Profile.css */
+@import '../theme.css';
 
 /* Entire page container */
 .profile-container {
   font-family: 'Inter', sans-serif;
-  background: #ffffff;
+  background: var(--bg-gradient);
   min-height: 100vh;
-  padding: 20px 40px; /* top/bottom 20px, left/right 40px */
+  padding: 20px 40px;
+  position: relative;
 }
 
-/* “BruinPlan” heading in top-left */
+/* "BruinPlan" heading in top-left */
 .profile-title {
-  color: #487EC4;
+  color: var(--white);
   font-size: 72px;
   font-weight: 700;
-  margin: 0 0 40px 0; /* bottom margin 40px */
+  margin: 0 0 40px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Profile icon wrapper (top-right) */
+.profile-icon-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+}
+
+/* Profile icon styling */
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  background: var(--dark-yellow);
+}
+
+.profile-icon:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+/* Profile dropdown menu */
+.profile-popup-menu {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  min-width: 160px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.profile-popup-menu button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 15px;
+  color: var(--white);
+  cursor: pointer;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.profile-popup-menu button:hover {
+  background: rgba(255, 224, 163, 0.1);
+  color: var(--light-yellow);
 }
 
 /* Layout: sidebar | divider | main area */
 .profile-content {
   display: flex;
   align-items: flex-start;
+  margin-top: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Remove the divider since it's causing offset */
+.profile-divider {
+  display: none;
 }
 
 /* Sidebar (left) styling */
@@ -33,33 +102,66 @@
 .sidebar-button {
   width: 180px;
   height: 50px;
-  background: #ffffff;
-  border: 1px solid #E9E2E2;
-  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-xl);
   font-size: 16px;
   font-weight: 500;
+  color: var(--white);
   cursor: pointer;
+  transition: all var(--transition-fast);
 }
 
-/* Vertical divider line */
-.profile-divider {
-  width: 1px;
-  background: #ccc;
-  margin: 0 40px; /* left/right margin of 40px */
+.sidebar-button:hover {
+  background: rgba(255, 224, 163, 0.1);
+  border-color: var(--dark-yellow);
+  color: var(--light-yellow);
+  transform: translateX(5px);
 }
 
 /* Main content area: 2×2 grid */
 .profile-main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 40px;
+  grid-gap: 60px;
+  max-width: fit-content;
+  margin: 0 auto;
+  padding: 0 40px;
 }
 
-/* Placeholder card box */
+/* Schedule card box */
 .profile-card {
-  width: 300px;
-  height: 180px;
-  background: #e0e0e0;
-  border: 1px solid #888;
-  border-radius: 8px;
+  width: 500px;
+  height: 380px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--light-yellow);
+  cursor: pointer;
+}
+
+.profile-card-empty {
+  border: 1px dashed var(--grey);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.empty-schedule-message {
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 500;
+  opacity: 0.7;
+  text-align: center;
 }

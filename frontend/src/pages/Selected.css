@@ -1,65 +1,132 @@
 /* src/pages/Selected.css */
+@import '../theme.css';
 
-/* Root container: full viewport height, white background */
+/* Root container: full viewport height, dark background */
 .selected-container {
   position: relative;
   font-family: 'Inter', sans-serif;
-  background: #ffffff;
+  background: var(--bg-gradient);
   min-height: 100vh;
-  padding: 20px 40px; /* top/bottom 20px, left/right 40px */
+  padding: 20px 40px;
 }
 
-/* “BruinPlan” title (top-left) */
+/* "BruinPlan" title (top-left) */
 .selected-title {
-  color: #487EC4;
+  color: var(--white);
   font-size: 72px;
   font-weight: 700;
-  margin: 0; /* no default margin */
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Profile icon wrapper (top-right) */
+.profile-icon-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 40px;
 }
 
 /* Profile icon (top-right) */
 .selected-profile-icon {
-  position: absolute;
-  top: 20px;
-  right: 40px;
   width: 40px;
   height: 40px;
   cursor: pointer;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+  background: var(--dark-yellow);
 }
 
-/* Centered sub‐heading (“Selected Schedule”) */
+.selected-profile-icon:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-md);
+}
+
+/* Profile popup menu */
+.profile-popup-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  min-width: 160px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 15px;
+  color: var(--white);
+  cursor: pointer;
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 224, 163, 0.1);
+  color: var(--light-yellow);
+}
+
+/* Centered sub‐heading ("Selected Schedule") */
 .selected-heading {
   text-align: center;
   font-size: 32px;
-  font-weight: 400;
-  color: #000;
-  margin-top: 100px; /* pushes it down beneath the back arrow */
+  font-weight: 600;
+  color: var(--white);
+  margin-top: 100px;
   margin-bottom: 40px;
 }
 
-/* Gray rectangle placeholder (schedule preview) */
+/* Schedule preview container */
 .selected-rect {
-  width: 800px;       /* adjust width as needed */
-  height: 400px;      /* adjust height as needed */
-  background: #e0e0e0;
-  border: 1px solid #888;
-  border-radius: 4px;
-  margin: 0 auto;     /* center horizontally */
+  width: 800px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--grey);
+  border-radius: var(--border-radius-lg);
+  margin: 0 auto;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
 }
 
-/* “Import to Google Calendar” button (bottom center) */
+.selected-rect:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* "Import to Google Calendar" button (bottom center) */
 .selected-button {
   position: absolute;
-  bottom: 40px;       /* 40px up from bottom of viewport */
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  background: #F7CB47;
+  background: var(--dark-yellow);
   border: none;
-  border-radius: 50px;
+  border-radius: var(--border-radius-xl);
   padding: 15px 60px;
   font-size: 20px;
   font-weight: 600;
-  color: #fff;
+  color: var(--black);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-fast);
+}
+
+.selected-button:hover {
+  background: color-mix(in srgb, var(--dark-yellow) 90%, white);
+  box-shadow: var(--shadow-lg);
+  transform: translate(-50%, -2px);
 }

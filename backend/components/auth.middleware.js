@@ -49,10 +49,16 @@ passport.deserializeUser((user, done) => {
 
 // Authentication middleware
 export const isAuthenticated = (req, res, next) => {
+  console.log('Auth Check - Session:', req.session);
+  console.log('Auth Check - User:', req.user);
+  console.log('Auth Check - isAuthenticated:', req.isAuthenticated());
+  
   if (req.isAuthenticated()) {
+    console.log('User is authenticated, proceeding...');
     return next();
   }
-  res.status(401).json({ message: 'Unauthorized' });
+  console.log('Authentication failed - no valid session');
+  res.status(401).json({ message: 'Unauthorized - Please log in' });
 };
 
 export default passport; 
