@@ -1,19 +1,68 @@
 // src/pages/Dashboard.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
 export default function Dashboard() {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleProfileClick = () => {
+    setDropdownOpen(prev => !prev);
+  };
+
+  const goToSavedSchedules = () => {
+    setDropdownOpen(false);
+    navigate('/profile');
+  };
+
+  const handleSignOut = () => {
+    setDropdownOpen(false);
+    // (Optional) clear auth tokens or session here
+    navigate('/');
+  };
+
   return (
     <div className="dashboard-container">
-      {/* Profile icon (links to /profile) */}
-      <Link to="/profile">
+      {/* Profile icon + dropdown wrapper */}
+      <div className="profile-wrapper" ref={dropdownRef}>
         <img
           className="dashboard-profile-icon"
           src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png"
           alt="Profile"
+          onClick={handleProfileClick}
         />
-      </Link>
+        {dropdownOpen && (
+          <div className="profile-dropdown">
+            <button
+              className="dropdown-item"
+              onClick={goToSavedSchedules}
+            >
+              Saved Schedules
+            </button>
+            <button className="dropdown-item" onClick={handleSignOut}>
+              Sign Out
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Title */}
       <h1 className="dashboard-title">BruinPlan</h1>

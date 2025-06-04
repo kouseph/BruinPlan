@@ -6,6 +6,7 @@
   background: #ffffff;
   min-height: 100vh;
   padding: 20px 40px; /* top/bottom 20px, left/right 40px */
+  position: relative;
 }
 
 /* “BruinPlan” heading in top-left */
@@ -16,10 +17,61 @@
   margin: 0 0 40px 0; /* bottom margin 40px */
 }
 
+/* Profile icon wrapper (top-right) */
+.profile-icon-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+}
+
+/* Profile icon styling */
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  transition: transform 0.1s ease-in-out;
+}
+.profile-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Profile dropdown menu */
+.profile-popup-menu {
+  position: absolute;
+  top: 48px; /* just below the icon */
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  min-width: 160px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+.profile-popup-menu button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 15px;
+  color: #222;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
+.profile-popup-menu button:hover {
+  background: #f5f5f5;
+}
+
 /* Layout: sidebar | divider | main area */
 .profile-content {
   display: flex;
   align-items: flex-start;
+  margin-top: 20px;
 }
 
 /* Sidebar (left) styling */
