@@ -7,7 +7,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
 
-  // Show “LOGIN REQUIRED” toast if navigated with showLoginRequired flag
+  // Show "LOGIN REQUIRED" toast if navigated with showLoginRequired flag
   useEffect(() => {
     if (location.state && location.state.showLoginRequired) {
       setShowToast(true);
@@ -74,24 +74,22 @@ export default function Login() {
       )}
 
       <div style={{ textAlign: 'center', position: 'relative' }}>
-        {/* “BruinPlan” title (top-left) linking to home */}
+        {/* "BruinPlan" title (top-left) linking to home */}
         <Link to="/" style={{ textDecoration: 'none' }}>
           <h1
             style={{
-              position: 'absolute',
-              top: '-160px',
-              left: '-480px',
-              color: '#487EC4',
+              color: '#F5B301',
               fontSize: '74px',
               fontWeight: 700,
-              margin: 0,
+              margin: '0 0 40px 0',
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
             }}
           >
             BruinPlan
           </h1>
         </Link>
 
-        {/* “Welcome back” heading */}
+        {/* "Welcome back" heading */}
         <h2
           style={{
             fontSize: '32px',
