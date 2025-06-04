@@ -152,3 +152,16 @@
   border-color: var(--light-yellow);
   cursor: pointer;
 }
+
+.profile-card-empty {
+  border: 1px dashed var(--grey);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.empty-schedule-message {
+  color: var(--white);
+  font-size: 1.2rem;
+  font-weight: 500;
+  opacity: 0.7;
+  text-align: center;
+}

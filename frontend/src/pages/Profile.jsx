@@ -57,8 +57,45 @@ const sampleSchedule = [
 
 export default function Profile() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userSchedules, setUserSchedules] = useState([]);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/user', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.status === 401) {
+          // Redirect to login if unauthorized
+          console.log('User not authenticated, redirecting to login...');
+          navigate('/login');
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const userData = await response.json();
+        console.log('User Schedules:', userData.schedules);
+        setUserSchedules(userData.schedules || []);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        if (error.message.includes('Failed to fetch')) {
+          console.log('Server connection error - please check if the backend server is running');
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -81,6 +118,15 @@ export default function Profile() {
     setDropdownOpen(false);
     navigate('/');
   };
+
+  // Create array of 4 slots for schedules in the correct order
+  const scheduleSlots = Array(4).fill(null);
+  const slotOrder = [0, 1, 2, 3]; // Maps to: top-left, top-right, bottom-left, bottom-right
+  userSchedules.forEach((schedule, index) => {
+    if (index < 4 && Array.isArray(schedule) && schedule.length > 0) {
+      scheduleSlots[slotOrder[index]] = schedule;
+    }
+  });
 
   return (
     <div className="profile-container">
@@ -108,10 +154,21 @@ export default function Profile() {
         <div className="profile-divider" />
 
         <div className="profile-main">
-          {/* Display four cards with sample schedules */}
-          {[...Array(4)].map((_, index) => (
-            <div key={index} className="profile-card">
-              <MiniSchedule schedule={sampleSchedule} />
+          {scheduleSlots.map((schedule, index) => (
+            <div 
+              key={index} 
+              className={`profile-card ${!schedule ? 'profile-card-empty' : ''}`}
+              style={{
+                order: index // Ensure the order matches the grid layout
+              }}
+            >
+              {schedule && schedule.length > 0 ? (
+                <MiniSchedule schedule={schedule} />
+              ) : (
+                <div className="empty-schedule-message">
+                  Save a Schedule
+                </div>
+              )}
             </div>
           ))}
         </div>
