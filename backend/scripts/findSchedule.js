@@ -134,8 +134,14 @@ function calculateTotalGap(schedule) {
 
   for (const item of schedule) {
     if (!item.timeValid || item.day === "---") continue;
-    if (!dayGroups[item.day]) dayGroups[item.day] = [];
-    dayGroups[item.day].push(item);
+
+    // Split multiple days like "Tuesday, Thursday"
+    const days = item.day.split(",").map((d) => d.trim());
+
+    for (const day of days) {
+      if (!dayGroups[day]) dayGroups[day] = [];
+      dayGroups[day].push({ ...item, day }); // keep a copy for each day
+    }
   }
 
   let totalGap = 0;
@@ -226,6 +232,21 @@ function prettyPrint(schedule) {
   }
 }
 
+function findAllOptimizedSchedules(courses) {
+  const allSchedules = generateAllSchedules(courses);
+  const validSchedules = allSchedules.filter(isValidSchedule);
+
+  if (validSchedules.length === 0) {
+    return []; // or return a message if you prefer
+  }
+
+  validSchedules.sort((a, b) => {
+    return calculateTotalGap(a.schedule) - calculateTotalGap(b.schedule);
+  });
+
+  return validSchedules.map((sched) => sched.schedule);
+}
+
 const courses = [
   {
     _id: { $oid: "682fad62516c94b923cca52f" },
@@ -306,26 +327,4 @@ const courses = [
     instructor: "Edu, U.F.\nTesfai, M.G.",
     section: "Lec 2",
     sectionLink:
-      "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=AF%20AMER&crs_catlg_no=0188A%20%20%20&class_id=413828300&class_no=%20002%20%20",
-    time: "11am-1:50pm",
-    finalExam: {
-      date: "None listed",
-      day: "---",
-      note: "---",
-      time: "Consult instructor for method of evaluation",
-      _id: { $oid: "682fad62516c94b923cca560" },
-    },
-    __v: { $numberInt: "0" },
-  },
-  {
-    course: "20C - Team and Leadership Fundamentals",
-    day: "Friday",
-    discussions: [],
-    instructor: "Malone, M.B.",
-    section: "Lec 1",
-    time: "1pm-1:50pm",
-  },
-];
-
-const result = findOptimizedSchedule(courses);
-prettyPrint(result);
+      "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_
