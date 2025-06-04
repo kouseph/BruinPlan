@@ -82,7 +82,13 @@
   display: flex;
   align-items: flex-start;
   margin-top: 20px;
-  gap: 40px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* Remove the divider since it's causing offset */
+.profile-divider {
+  display: none;
 }
 
 /* Sidebar (left) styling */
@@ -113,32 +119,30 @@
   transform: translateX(5px);
 }
 
-/* Vertical divider line */
-.profile-divider {
-  width: 2px;
-  background: var(--grey);
-  margin: 0 20px;
-  border-radius: var(--border-radius-xl);
-}
-
 /* Main content area: 2×2 grid */
 .profile-main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 40px;
-  flex: 1;
+  grid-gap: 60px;
+  max-width: fit-content;
+  margin: 0 auto;
+  padding: 0 40px;
 }
 
-/* Placeholder card box */
+/* Schedule card box */
 .profile-card {
-  width: 300px;
-  height: 180px;
+  width: 500px;
+  height: 380px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--grey);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
   backdrop-filter: blur(10px);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .profile-card:hover {
@@ -146,4 +150,5 @@
   transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.15);
   border-color: var(--light-yellow);
+  cursor: pointer;
 }
