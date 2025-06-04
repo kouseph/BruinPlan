@@ -2,7 +2,7 @@ import passport from 'passport';
 import dotenv from 'dotenv';
 dotenv.config();
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
-import user from '../models/user.js';
+import User from '../models/user.js';
 
 passport.use(new GoogleStrategy({
     clientID:     process.env.GOOGLE_CLIENT_ID,
@@ -13,7 +13,7 @@ passport.use(new GoogleStrategy({
 
   async function(request, accessToken, refreshToken, profile, done) {
     try {
-      const existingUser = await user.findOne({ googleId: profile.id });
+      const existingUser = await User.findOne({ googleId: profile.id });
 
       if (existingUser) {
         // Optionally update info
@@ -22,7 +22,7 @@ passport.use(new GoogleStrategy({
         await existingUser.save();
         return done(null, existingUser);
       } else {
-        const newUser = await user.create({
+        const newUser = await User.create({
           googleId: profile.id,
           email: profile.email,
           name: profile.displayName,

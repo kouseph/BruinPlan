@@ -4,7 +4,8 @@ import session from "express-session";
 import connectDB from './config/db.js';
 import './config/auth.js'; 
 import passport from 'passport';
-import course from './models/course.js';
+import scheduleRoutes from './app/api/schedules.js';
+
 
 const hostname = "127.0.0.1"; // or 'localhost'
 const port = 3000;
@@ -14,10 +15,15 @@ const server = express();
 connectDB();
 
 
+server.use(express.json());
+
 //intializes session for server 
 server.use(session({secret: process.env.SECRET})); 
 server.use(passport.initialize());
 server.use(passport.session());
+
+//mount schedule endpoints 
+server.use(scheduleRoutes); 
 
 //logic for routes loggin in and loggin out
 function isLoggedIn(req,res,next){
