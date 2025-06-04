@@ -92,9 +92,30 @@ export default function Schedules() {
     };
   }, []);
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     setShowSavedToast(true);
-    // (Optional) Insert server-save logic here
+    try {
+      const response = await fetch('http://localhost:3000/api/schedules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // 🔐 send cookies (required for sessions)
+        body: JSON.stringify({
+          schedule: sampleSchedule, // replace with actual schedule data
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('✅ Schedule saved:', data);
+      } else {
+        console.error('❌ Error:', data.message);
+      }
+    } catch (err) {
+      console.error('🚨 Network error:', err);
+    }
   };
 
   const handleProfileClick = () => {

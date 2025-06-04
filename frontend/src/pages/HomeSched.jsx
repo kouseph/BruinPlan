@@ -69,15 +69,53 @@ export default function HomeSched() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
     // Check if we came from the dashboard (logged in) or home (not logged in)
+    console.log('Location state:', location.state);
     const isLoggedIn = location.state?.from === 'dashboard';
+    console.log('Is logged in?', isLoggedIn);
     
     if (!isLoggedIn) {
+      console.log('Not logged in, redirecting to login');
       navigate('/login', { state: { showLoginRequired: true } });
     } else {
-      alert('Schedule saved successfully!');
-      // Add your save logic here
+      try {
+        console.log('Attempting to save schedule:', sampleSchedule);
+        const response = await fetch('http://localhost:3000/api/schedules', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            schedule: sampleSchedule
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Save successful:', data);
+          alert('Schedule saved successfully!');
+        } else {
+          let errorMessage;
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message;
+          } catch (e) {
+            // If response is not JSON
+            errorMessage = await response.text();
+          }
+          console.error('Save failed:', {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorMessage
+          });
+          alert(`Failed to save schedule: ${errorMessage || 'Unknown error'}`);
+        }
+      } catch (error) {
+        console.error('Network error:', error);
+        alert('Failed to save schedule. Please check your connection and try again.');
+      }
     }
   };
 
