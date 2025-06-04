@@ -17,10 +17,13 @@ export default function Login() {
   }, [location.state]);
 
   const handleLoginClick = () => {
+    // Set logged in state in localStorage
+    localStorage.setItem('isLoggedIn', 'true');
     navigate("/dashboard");
   };
 
   const handleGoogleClick = () => {
+    // For Google login, we'll set the logged in state after successful OAuth
     window.location.href = "http://localhost:3000/google";
   };
 
