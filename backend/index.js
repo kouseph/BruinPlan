@@ -1,10 +1,10 @@
-import http, { ServerResponse } from "http";
 import express from "express";
 import session from "express-session";
 import connectDB from './config/db.js';
 import './config/auth.js'; 
 import passport from 'passport';
 import scheduleRoutes from './app/api/schedules.js';
+import userRoutes from './app/api/user.js';
 
 
 const hostname = "127.0.0.1"; // or 'localhost'
@@ -24,6 +24,7 @@ server.use(passport.session());
 
 //mount schedule endpoints 
 server.use(scheduleRoutes); 
+server.use(userRoutes);
 
 //logic for routes loggin in and loggin out
 function isLoggedIn(req,res,next){
