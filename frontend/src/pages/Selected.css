@@ -1,0 +1,65 @@
+/* src/pages/Selected.css */
+
+/* Root container: full viewport height, white background */
+.selected-container {
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  min-height: 100vh;
+  padding: 20px 40px; /* top/bottom 20px, left/right 40px */
+}
+
+/* “BruinPlan” title (top-left) */
+.selected-title {
+  color: #487EC4;
+  font-size: 72px;
+  font-weight: 700;
+  margin: 0; /* no default margin */
+}
+
+/* Profile icon (top-right) */
+.selected-profile-icon {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+/* Centered sub‐heading (“Selected Schedule”) */
+.selected-heading {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 400;
+  color: #000;
+  margin-top: 100px; /* pushes it down beneath the back arrow */
+  margin-bottom: 40px;
+}
+
+/* Gray rectangle placeholder (schedule preview) */
+.selected-rect {
+  width: 800px;       /* adjust width as needed */
+  height: 400px;      /* adjust height as needed */
+  background: #e0e0e0;
+  border: 1px solid #888;
+  border-radius: 4px;
+  margin: 0 auto;     /* center horizontally */
+}
+
+/* “Import to Google Calendar” button (bottom center) */
+.selected-button {
+  position: absolute;
+  bottom: 40px;       /* 40px up from bottom of viewport */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F7CB47;
+  border: none;
+  border-radius: 50px;
+  padding: 15px 60px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
