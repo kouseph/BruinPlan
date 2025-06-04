@@ -1,0 +1,75 @@
+.schedule-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+  padding: 80px 40px;
+}
+
+.schedule-modal-content {
+  background: var(--bg-gradient);
+  border-radius: var(--border-radius-xl);
+  padding: 60px 40px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--grey);
+  animation: scaleIn 0.2s ease-out;
+}
+
+.full-schedule {
+  width: 900px;
+  height: 650px;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+}
+
+/* Override MiniSchedule styles when in modal */
+.full-schedule .mini-timetable-grid {
+  font-size: 16px !important;
+  border-radius: var(--border-radius-lg) !important;
+}
+
+.full-schedule .mini-grid-header {
+  font-size: 18px !important;
+}
+
+.full-schedule .mini-time-label {
+  font-size: 14px !important;
+}
+
+.full-schedule .mini-event-block {
+  font-size: 14px !important;
+  padding: 6px !important;
+  border-radius: 6px !important;
+}
+
+.full-schedule .mini-event-section {
+  font-size: 12px !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+} 

@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import MiniSchedule from '../components/MiniSchedule';
+import ScheduleModal from '../components/ScheduleModal';
 import './Profile.css';
 
 // Import sample schedule data
@@ -58,6 +59,7 @@ const sampleSchedule = [
 export default function Profile() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userSchedules, setUserSchedules] = useState([]);
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -119,14 +121,18 @@ export default function Profile() {
     navigate('/');
   };
 
-  // Create array of 4 slots for schedules in the correct order
-  const scheduleSlots = Array(4).fill(null);
-  const slotOrder = [0, 1, 2, 3]; // Maps to: top-left, top-right, bottom-left, bottom-right
-  userSchedules.forEach((schedule, index) => {
-    if (index < 4 && Array.isArray(schedule) && schedule.length > 0) {
-      scheduleSlots[slotOrder[index]] = schedule;
+  const handleScheduleClick = (schedule) => {
+    if (schedule) {  // Only open modal for actual schedules, not the empty card
+      setSelectedSchedule(schedule);
     }
-  });
+  };
+
+  const handleCloseModal = () => {
+    setSelectedSchedule(null);
+  };
+
+  // Create array of all schedules plus one empty slot
+  const displaySchedules = [...userSchedules, null];
 
   return (
     <div className="profile-container">
@@ -154,25 +160,30 @@ export default function Profile() {
         <div className="profile-divider" />
 
         <div className="profile-main">
-          {scheduleSlots.map((schedule, index) => (
+          {displaySchedules.map((schedule, index) => (
             <div 
               key={index} 
               className={`profile-card ${!schedule ? 'profile-card-empty' : ''}`}
-              style={{
-                order: index // Ensure the order matches the grid layout
-              }}
+              onClick={() => handleScheduleClick(schedule)}
             >
-              {schedule && schedule.length > 0 ? (
+              {schedule ? (
                 <MiniSchedule schedule={schedule} />
               ) : (
                 <div className="empty-schedule-message">
-                  Save a Schedule
+                  + New Schedule
                 </div>
               )}
             </div>
           ))}
         </div>
       </div>
+
+      {selectedSchedule && (
+        <ScheduleModal
+          schedule={selectedSchedule}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 }

@@ -77,7 +77,7 @@
   color: var(--light-yellow);
 }
 
-/* Layout: sidebar | divider | main area */
+/* Layout: main area */
 .profile-content {
   display: flex;
   align-items: flex-start;
@@ -119,20 +119,20 @@
   transform: translateX(5px);
 }
 
-/* Main content area: 2×2 grid */
+/* Main content area: 2 cards per row */
 .profile-main {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 60px;
-  max-width: fit-content;
+  grid-auto-rows: 380px;
+  gap: 60px;
+  width: 1060px;
   margin: 0 auto;
-  padding: 0 40px;
+  justify-content: center;
 }
 
 /* Schedule card box */
 .profile-card {
   width: 500px;
-  height: 380px;
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid var(--grey);
   border-radius: var(--border-radius-lg);
@@ -143,25 +143,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  cursor: pointer;
 }
 
-.profile-card:hover {
-  box-shadow: var(--shadow-lg);
+.profile-card:not(.profile-card-empty):hover {
   transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-lg);
   border-color: var(--light-yellow);
-  cursor: pointer;
 }
 
 .profile-card-empty {
   border: 1px dashed var(--grey);
   background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+.profile-card-empty:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--light-yellow);
 }
 
 .empty-schedule-message {
   color: var(--white);
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 500;
   opacity: 0.7;
   text-align: center;
+}
+
+.profile-card-empty:hover .empty-schedule-message {
+  opacity: 1;
+  color: var(--light-yellow);
 }
