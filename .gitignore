@@ -1,0 +1,4 @@
+#ignore environment variables and files 
+.env
+.deb
+node_modules/
