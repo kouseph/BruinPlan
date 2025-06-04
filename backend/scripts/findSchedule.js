@@ -327,4 +327,41 @@ const courses = [
     instructor: "Edu, U.F.\nTesfai, M.G.",
     section: "Lec 2",
     sectionLink:
-      "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_
+      "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=AF%20AMER&crs_catlg_no=0188A%20%20%20&class_id=413828300&class_no=%20002%20%20",
+    time: "11am-1:50pm",
+    finalExam: {
+      date: "None listed",
+      day: "---",
+      note: "---",
+      time: "Consult instructor for method of evaluation",
+      _id: { $oid: "682fad62516c94b923cca560" },
+    },
+    __v: { $numberInt: "0" },
+  },
+  {
+    course: "20C - Team and Leadership Fundamentals",
+    day: "Friday",
+    discussions: [],
+    instructor: "Malone, M.B.",
+    section: "Lec 1",
+    time: "1pm-1:50pm",
+  },
+];
+
+const allValidSortedSchedules = findAllOptimizedSchedules(courses);
+
+// To preview all of them nicely
+if (allValidSortedSchedules.length === 0) {
+  console.log(
+    "❌ No valid schedule: lectures, discussions, or final exams conflict."
+  );
+} else {
+  allValidSortedSchedules.forEach((schedule, idx) => {
+    console.log(
+      `\n🔢 Schedule #${idx + 1} (Total Gap: ${calculateTotalGap(
+        schedule
+      )} hrs):`
+    );
+    prettyPrint(schedule);
+  });
+}
