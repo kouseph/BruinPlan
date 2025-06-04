@@ -1,76 +1,45 @@
-import express from "express";
-import session from "express-session";
-import connectDB from './config/db.js';
-import './config/auth.js'; 
-import passport from 'passport';
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
+import passport from './components/auth.middleware.js';
+import connectDB from './utils/db.js';
+import config from './config/env.js';
+import authRoutes from './routes/auth.routes.js';
 import scheduleRoutes from './app/api/schedules.js';
 import userRoutes from './app/api/user.js';
 
+const app = express();
 
-const hostname = "127.0.0.1"; // or 'localhost'
-const port = 3000;
-const server = express();
-
-//connects to db then populates the db with courses
+// Connect to MongoDB
 connectDB();
 
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: config.sessionSecret,
+  resave: false,
+  saveUninitialized: false
+}));
 
-server.use(express.json());
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
-//intializes session for server 
-server.use(session({secret: process.env.SECRET})); 
-server.use(passport.initialize());
-server.use(passport.session());
+// Routes
+app.use('/auth', authRoutes);
+app.use(scheduleRoutes);
+app.use(userRoutes);
 
-//mount schedule endpoints 
-server.use(scheduleRoutes); 
-server.use(userRoutes);
-
-//logic for routes loggin in and loggin out
-function isLoggedIn(req,res,next){
-    req.user ? next() : res.sendStatus(401);
-}
-server.get('/', (req, res) => {
-  res.send('<a href="/auth/google">Authenticate with Google</a>');
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
 });
 
-server.get('/auth/google',
-  passport.authenticate('google', { scope: ['email','profile']})
-)
-
-server.get('/google/callback', // starting route to authenticate
-  passport.authenticate('google',{
-    successRedirect: '/protected',
-    failureRedirect: '/auth/failure',
-  })
-)
-
-server.get('/protected', isLoggedIn, (req,res) => { // route once logged in
-  res.send('<a href="/logout">LogOut</a>');
-})
-
-server.get('/auth/failure', (req,res) => { // route failure
-  res.send("Something Went Wrong");
-})
-
-server.get('/logout', (req, res, next) => { //route to log out
-  req.logout(function(err) {
-    if (err) {
-      return next(err);
-    }
-
-    req.session.destroy(function(err) {
-      if (err) {
-        return next(err);
-      }
-
-      res.clearCookie('connect.sid'); // clears the session cookie
-      res.redirect('/');
-    });
-  });
-});
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+const PORT = config.port;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
 
