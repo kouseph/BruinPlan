@@ -20,6 +20,89 @@
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
+/* Loading Message */
+.loading-message {
+  color: var(--white);
+  font-size: 18px;
+  text-align: center;
+  margin-top: 100px;
+}
+
+/* Schedule Selector */
+.schedule-selector {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.schedule-selector h3 {
+  color: var(--white);
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.schedule-options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.schedule-option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--grey);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
+}
+
+.schedule-option:hover {
+  background: rgba(255, 224, 163, 0.2);
+  border-color: var(--light-yellow);
+}
+
+.schedule-option.active {
+  background: var(--dark-yellow);
+  color: var(--black);
+  border-color: var(--dark-yellow);
+}
+
+.gap-info {
+  display: block;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* Course Summary */
+.course-summary {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.course-summary h3 {
+  color: var(--white);
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.course-list {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.course-chip {
+  background: var(--light-yellow);
+  color: var(--black);
+  padding: 6px 12px;
+  border-radius: var(--border-radius-xl);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* Timetable Grid Layout */
 .timetable-grid {
   position: relative;
@@ -80,75 +163,119 @@
 
 /* Individual Event Block */
 .event-block {
-  padding: 6px 8px;
+  background: var(--light-blue);
+  color: var(--white);
+  padding: 6px;
   border-radius: var(--border-radius-sm);
-  color: var(--black);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.2;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  white-space: normal;
-  word-wrap: break-word;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
 }
 
 .event-block:hover {
   transform: scale(1.02);
   box-shadow: var(--shadow-md);
+  z-index: 10;
 }
 
-/* Lecture blocks */
 .event-block.lecture {
-  background: var(--dark-yellow);
-  border: 1px solid var(--light-yellow);
-}
-
-/* Discussion blocks */
-.event-block.discussion {
   background: var(--light-blue);
-  border: 1px solid var(--white);
-  color: var(--white);
 }
 
-/* Inside each event-block */
+.event-block.discussion {
+  background: var(--dark-yellow);
+  color: var(--black);
+}
+
 .event-course {
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 2px;
-  font-size: 13px;
-  color: inherit;
+  font-size: 10px;
 }
 
 .event-section {
-  font-weight: 500;
-  margin-bottom: 2px;
-  font-size: 12px;
-  color: inherit;
+  font-size: 9px;
+  opacity: 0.9;
 }
 
-/* Save button */
+.event-time {
+  font-size: 8px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--grey);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(10px);
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--light-yellow);
+}
+
+/* Save Button */
 .schedules-save-button {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
   background: var(--dark-yellow);
   border: none;
-  border-radius: var(--border-radius-xl);
-  padding: 23px 50px;
-  font-size: 24px;
-  font-weight: 700;
+  border-radius: var(--border-radius-md);
+  padding: 12px 32px;
+  font-size: 18px;
+  font-weight: 600;
   color: var(--black);
   cursor: pointer;
-  box-shadow: var(--shadow-md);
   transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
 .schedules-save-button:hover {
   background: color-mix(in srgb, var(--dark-yellow) 90%, white);
-  transform: translate(-50%, -2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Empty Schedule Message */
+.empty-schedule-message {
+  text-align: center;
+  color: var(--white);
+  margin-top: 50px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--border-radius-lg);
+  backdrop-filter: blur(10px);
+}
+
+.empty-schedule-message h3 {
+  color: var(--light-yellow);
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.empty-schedule-message p {
+  margin-bottom: 25px;
+  font-size: 16px;
+  opacity: 0.8;
 }

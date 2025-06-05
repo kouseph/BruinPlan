@@ -1,60 +1,7 @@
 // src/pages/HomeSched.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import './HomeSched.css';
-
-// === Sample data (same as Schedules.jsx) ===
-const sampleSchedule = [
-  {
-    day: 'Tuesday, Thursday',
-    timeValid: true,
-    start: 11,
-    end: 12.833333333333334,
-    type: 'lecture',
-    course: 'M107 - Cultural History of Rap',
-    timeStr: '11am-12:50pm'
-  },
-  {
-    day: 'Thursday',
-    timeValid: true,
-    start: 13,
-    end: 13.833333333333334,
-    type: 'discussion',
-    course: 'M107 - Cultural History of Rap',
-    section: 'Dis 1C',
-    timeStr: '1pm-1:50pm'
-  },
-  {
-    day: 'Wednesday',
-    timeValid: true,
-    start: 11,
-    end: 13.833333333333334,
-    type: 'lecture',
-    course:
-      '188A - Special Courses in African American Studies: Black Feminist Ethnography',
-    timeStr: '11am-1:50pm'
-  },
-  {
-    day: 'Thursday',
-    timeValid: true,
-    start: 14,
-    end: 14.833333333333334,
-    type: 'discussion',
-    course:
-      '188A - Special Courses in African American Studies: Black Feminist Ethnography',
-    section: 'Dis 2C',
-    timeStr: '2pm-2:50pm'
-  },
-  {
-    day: 'Friday',
-    timeValid: true,
-    start: 13,
-    end: 13.833333333333334,
-    type: 'lecture',
-    course: '20C - Team and Leadership Fundamentals',
-    timeStr: '1pm-1:50pm'
-  }
-];
 
 // Map each weekday name to its grid column number
 const dayColumnMap = {
@@ -68,6 +15,34 @@ const dayColumnMap = {
 export default function HomeSched() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentScheduleIndex, setCurrentScheduleIndex] = useState(0);
+  const [schedules, setSchedules] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [currentSchedule, setCurrentSchedule] = useState([]);
+
+  useEffect(() => {
+    // Get schedule data from navigation state
+    const state = location.state;
+    
+    if (state && state.schedules && state.selectedCourses) {
+      setSchedules(state.schedules);
+      setSelectedCourses(state.selectedCourses);
+      
+      // Set the first schedule as current
+      if (state.schedules.length > 0) {
+        setCurrentSchedule(state.schedules[0].schedule || []);
+      }
+    } else {
+      // If no schedule data, redirect back to home
+      console.log('No schedule data found, redirecting to home');
+      navigate('/', { replace: true });
+    }
+  }, [location.state, navigate]);
+
+  const handleScheduleChange = (index) => {
+    setCurrentScheduleIndex(index);
+    setCurrentSchedule(schedules[index].schedule || []);
+  };
 
   const handleSaveClick = async () => {
     // Check if we came from the dashboard (logged in) or home (not logged in)
@@ -80,7 +55,7 @@ export default function HomeSched() {
       navigate('/login', { state: { showLoginRequired: true } });
     } else {
       try {
-        console.log('Attempting to save schedule:', sampleSchedule);
+        console.log('Attempting to save schedule:', currentSchedule);
         const response = await fetch('http://localhost:3000/api/schedules', {
           method: 'POST',
           headers: {
@@ -88,7 +63,7 @@ export default function HomeSched() {
           },
           credentials: 'include',
           body: JSON.stringify({
-            schedule: sampleSchedule
+            schedule: currentSchedule
           })
         });
 
@@ -119,12 +94,68 @@ export default function HomeSched() {
     }
   };
 
+  const handleBackToPlanning = () => {
+    const from = location.state?.from;
+    if (from === 'dashboard') {
+      navigate('/dashboard');
+    } else {
+      navigate('/');
+    }
+  };
+
+  // Show loading if no schedule data yet
+  if (schedules.length === 0) {
+    return (
+      <div className="schedules-container">
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <h1 className="schedules-title">BruinPlan</h1>
+        </Link>
+        <div className="loading-message">
+          Loading your schedule...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="schedules-container">
       {/* "BruinPlan" title links to "/" */}
       <Link to="/" style={{ textDecoration: 'none' }}>
         <h1 className="schedules-title">BruinPlan</h1>
       </Link>
+
+      {/* Schedule Selection */}
+      {schedules.length > 1 && (
+        <div className="schedule-selector">
+          <h3>Generated Schedules ({schedules.length} options)</h3>
+          <div className="schedule-options">
+            {schedules.map((schedule, index) => (
+              <button
+                key={index}
+                className={`schedule-option ${index === currentScheduleIndex ? 'active' : ''}`}
+                onClick={() => handleScheduleChange(index)}
+              >
+                Option {index + 1}
+                {schedule.totalGapHours !== undefined && (
+                  <span className="gap-info">({schedule.totalGapHours.toFixed(1)}h gaps)</span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Course Summary */}
+      <div className="course-summary">
+        <h3>Selected Courses:</h3>
+        <div className="course-list">
+          {selectedCourses.map((course, index) => (
+            <span key={course._id || index} className="course-chip">
+              {course.fullTitle || course.course}
+            </span>
+          ))}
+        </div>
+      </div>
 
       {/* ====================== */}
       {/* Weekly Timetable Grid */}
@@ -168,7 +199,9 @@ export default function HomeSched() {
         })}
 
         {/* Render each event block in its proper day & time */}
-        {sampleSchedule.map((entry, idx) => {
+        {currentSchedule.map((entry, idx) => {
+          if (!entry.timeValid) return null; // Skip invalid time entries
+          
           // "Tuesday, Thursday" → ['Tuesday','Thursday']
           const days = entry.day.split(',').map((d) => d.trim());
           // Round start/end to nearest whole hour:
@@ -198,16 +231,33 @@ export default function HomeSched() {
                 {entry.section && (
                   <div className="event-section">{entry.section}</div>
                 )}
+                <div className="event-time">{entry.timeStr}</div>
               </div>
             );
           });
         }).flat()}
       </div>
 
-      {/* "SAVE" button */}
-      <button className="schedules-save-button" onClick={handleSaveClick}>
-        SAVE
-      </button>
+      {/* Action Buttons */}
+      <div className="action-buttons">
+        <button className="back-button" onClick={handleBackToPlanning}>
+          ← Back to Planning
+        </button>
+        <button className="schedules-save-button" onClick={handleSaveClick}>
+          SAVE SCHEDULE
+        </button>
+      </div>
+
+      {/* Empty Schedule Message */}
+      {currentSchedule.length === 0 && (
+        <div className="empty-schedule-message">
+          <h3>No valid schedule could be generated</h3>
+          <p>There may be time conflicts between your selected courses.</p>
+          <button className="back-button" onClick={handleBackToPlanning}>
+            ← Try Different Courses
+          </button>
+        </div>
+      )}
     </div>
   );
 }

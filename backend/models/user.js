@@ -17,16 +17,23 @@ const userSchema = new mongoose.Schema({
   googleId: { type: String, required: true, unique: true },
   email: String,
   name: String,
+  selectedCourses: {
+    type: [mongoose.Schema.Types.Mixed],
+    default: [],
+  },
   schedules: {
     type: [[scheduleItemSchema]],
     default: [],
   }
 });
 
-// Ensure schedules is always an array
+// Ensure schedules and selectedCourses are always arrays
 userSchema.pre('save', function(next) {
   if (!this.schedules) {
     this.schedules = [];
+  }
+  if (!this.selectedCourses) {
+    this.selectedCourses = [];
   }
   next();
 });
