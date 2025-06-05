@@ -73,3 +73,27 @@
     opacity: 1;
   }
 } 
+
+.export-button {
+  background-color: var(--dark-yellow); /* Gold/Yellow */
+  color: black;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  align-self: center;
+  transition: background-color 0.3s ease;
+}
+
+.export-button:hover {
+  background-color: #e6c200;
+}
+
+.schedule-modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* center button horizontally */
+}
