@@ -9,7 +9,10 @@ const scheduleItemSchema = new mongoose.Schema({
   type: { type: String, required: true },
   course: { type: String, required: true },
   section: String,  // Optional field
-  timeStr: { type: String, required: true }
+  timeStr: { type: String, required: true },
+  instructor: String, // Optional field
+  location: String,  // Optional field
+  sectionLink: String // Optional field
 }, { _id: false });
 
 // Define the main user schema
@@ -17,6 +20,8 @@ const userSchema = new mongoose.Schema({
   googleId: { type: String, required: true, unique: true },
   email: String,
   name: String,
+  accessToken: String,
+  refreshToken: String,
   selectedCourses: {
     type: [mongoose.Schema.Types.Mixed],
     default: [],
@@ -38,4 +43,21 @@ userSchema.pre('save', function(next) {
   next();
 });
 
-export default mongoose.model('User', userSchema);
+// Add method to validate schedule format
+userSchema.methods.validateSchedule = function(schedule) {
+  if (!Array.isArray(schedule)) return false;
+  
+  return schedule.every(entry => {
+    return entry.course && 
+           entry.day && 
+           entry.timeStr && 
+           entry.type && 
+           entry.timeValid !== undefined &&
+           entry.start !== undefined &&
+           entry.end !== undefined;
+  });
+};
+
+const User = mongoose.model('User', userSchema);
+
+export default User;

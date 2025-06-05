@@ -60,6 +60,7 @@ export default function Profile() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userSchedules, setUserSchedules] = useState([]);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -67,32 +68,17 @@ export default function Profile() {
     const fetchUserData = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/user', {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          credentials: 'include'
         });
-
-        if (response.status === 401) {
-          // Redirect to login if unauthorized
-          console.log('User not authenticated, redirecting to login...');
-          navigate('/login');
-          return;
-        }
-
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
-
         const userData = await response.json();
-        console.log('User Schedules:', userData.schedules);
+        setUser(userData);
         setUserSchedules(userData.schedules || []);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        if (error.message.includes('Failed to fetch')) {
-          console.log('Server connection error - please check if the backend server is running');
-        }
+        navigate('/login');
       }
     };
 
@@ -183,6 +169,8 @@ export default function Profile() {
         <ScheduleModal
           schedule={selectedSchedule}
           onClose={handleCloseModal}
+          googleId={user?.googleId}
+          scheduleIndex={userSchedules.indexOf(selectedSchedule)}
         />
       )}
     </div>

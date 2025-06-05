@@ -1,37 +1,46 @@
 import express from 'express';
-import session from 'express-session';
 import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import passport from './components/auth.middleware.js';
-import connectDB from './utils/db.js';
-import config from './config/env.js';
+import session from 'express-session';
 import authRoutes from './routes/auth.routes.js';
-import scheduleRoutes from './routes/schedule.routes.js';
 import userRoutes from './routes/user.routes.js';
+import scheduleRoutes from './routes/schedule.routes.js';
 import classes from './routes/course.routes.js'
+import calendarRoutes from './app/api/calendar/route.js';
+
+dotenv.config();
 
 const app = express();
 
-// Connect to MongoDB
-connectDB();
-
-// Middleware
+// Configure CORS before other middleware
 app.use(cors({
-  origin: 'http://localhost:3001', // Allow frontend origin
-  credentials: true, // Allow credentials (cookies)
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: config.sessionSecret,
-  resave: false,
-  saveUninitialized: false
+  origin: 'http://localhost:3001',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Initialize Passport
+// Session configuration
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Parse JSON bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Debug middleware to log requests
 app.use((req, res, next) => {
@@ -58,24 +67,30 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(scheduleRoutes);
 app.use('/api/courses', classes)
+app.use(calendarRoutes);
+
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
-});
-
-// 404 handler - must be after all other routes
-app.use((req, res) => {
-  res.status(404).json({ 
-    message: 'Route not found',
-    path: req.url
+  console.error(err.stack);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
 });
 
-const PORT = config.port;
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
   console.log('Available routes:');
   console.log('- GET  /');
   console.log('- GET  /auth/google');
