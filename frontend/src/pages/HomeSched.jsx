@@ -19,11 +19,44 @@ export default function HomeSched() {
   const [schedules, setSchedules] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [currentSchedule, setCurrentSchedule] = useState([]);
-  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [showSavedToast, setShowSavedToast] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Set login status based on navigation source + API verification as fallback
+  useEffect(() => {
+    const from = location.state?.from;
+    console.log('HomeSched - Navigation from:', from);
+    
+    // Primary check: navigation source
+    if (from === 'dashboard') {
+      setIsLoggedIn(true);
+      console.log('Is logged in: true (from dashboard)');
+    } else if (from === 'home') {
+      setIsLoggedIn(false);
+      console.log('Is logged in: false (from home)');
+    } else {
+      // Fallback: check actual auth status if navigation source is unclear
+      console.log('Navigation source unclear, checking API auth status');
+      const checkAuthStatus = async () => {
+        try {
+          const response = await fetch('http://localhost:3000/api/user', {
+            method: 'GET',
+            credentials: 'include',
+          });
+          const authStatus = response.ok;
+          setIsLoggedIn(authStatus);
+          console.log('Is logged in:', authStatus, '(from API check)');
+        } catch (error) {
+          console.log('API auth check failed, assuming not logged in');
+          setIsLoggedIn(false);
+        }
+      };
+      checkAuthStatus();
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (showSavedToast) {
@@ -69,13 +102,12 @@ export default function HomeSched() {
   };
 
   const handleSaveClick = async () => {
-    // Check if we came from the dashboard (logged in) or home (not logged in)
+    // Login status is determined by navigation source (dashboard = logged in, home = not logged in)
     console.log('Location state:', location.state);
-    // const isLoggedIn = location.state?.from === 'dashboard';
     console.log('Is logged in?', isLoggedIn);
     
     if (!isLoggedIn) {
-      console.log('Not logged in, redirecting to login');
+      console.log('Not logged in (came from home), redirecting to login');
       navigate('/login', { state: { showLoginRequired: true } });
     } else {
       setShowSavedToast(true);
@@ -150,10 +182,28 @@ export default function HomeSched() {
     navigate('/profile');
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setDropdownOpen(false);
-    // (Optional) clear auth tokens or session here
-    navigate('/');
+    
+    try {
+      // Call backend logout endpoint to clear session
+      await fetch('http://localhost:3000/logout', {
+        method: 'POST',
+        credentials: 'include', // Include cookies so backend can clear them
+      });
+    } catch (error) {
+      console.error('Logout request failed:', error);
+      // Continue with local cleanup even if backend call fails
+    }
+    
+    // Clear authentication state locally
+    setIsLoggedIn(false);
+    // Clear any localStorage items
+    localStorage.removeItem("isLoggedIn");
+    localStorage.clear(); // Clear all localStorage to be safe
+    
+    // Navigate to home with logout flag to prevent auth redirect loop
+    navigate('/', { state: { justLoggedOut: true } });
   };
 
   const handleBackToPlanning = () => {

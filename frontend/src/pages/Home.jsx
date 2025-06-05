@@ -1,13 +1,63 @@
 // src/pages/Home.jsx
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import CourseSearch from "../components/CourseSearch.js";
 import "../App.css";
 
 export default function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedCoursesData, setSelectedCoursesData] = useState([]);
   const [isGeneratingSchedule, setIsGeneratingSchedule] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+  // Check if user is already authenticated on mount
+  useEffect(() => {
+    // Skip auth check if user just logged out
+    if (location.state?.justLoggedOut) {
+      console.log('User just logged out, skipping auth check');
+      setIsCheckingAuth(false);
+      // Clear the state so refresh doesn't skip check
+      window.history.replaceState({}, document.title);
+      return;
+    }
+
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/user', {
+          method: 'GET',
+          credentials: 'include', // Include cookies for session-based auth
+        });
+
+        if (response.ok) {
+          // User is already authenticated, redirect to dashboard
+          console.log('User already authenticated, redirecting to dashboard');
+          navigate('/dashboard', { replace: true });
+          return;
+        }
+      } catch (error) {
+        console.log('No existing authentication found');
+      } finally {
+        setIsCheckingAuth(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, [navigate, location.state]);
+
+  // Show loading while checking auth
+  if (isCheckingAuth) {
+    return (
+      <div className="container">
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <h1 className="title">BruinPlan</h1>
+        </Link>
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          Loading...
+        </div>
+      </div>
+    );
+  }
 
   function onClickLogin() {
     navigate("/login");
@@ -64,7 +114,7 @@ export default function Home() {
 
   return (
     <div className="container">
-      {/* “BruinPlan” title now links to "/" */}
+      {/* "BruinPlan" title now links to "/" */}
       <Link to="/" style={{ textDecoration: "none" }}>
         <h1 className="title">BruinPlan</h1>
       </Link>

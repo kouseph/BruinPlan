@@ -96,7 +96,7 @@ export default function Dashboard() {
           state: { 
             schedules: result,
             selectedCourses: selectedCoursesData,
-            from: 'home'
+            from: 'dashboard'
           }
         });
       } else {

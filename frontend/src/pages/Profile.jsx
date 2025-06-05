@@ -117,10 +117,26 @@ export default function Profile() {
     setDropdownOpen((prev) => !prev);
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setDropdownOpen(false);
+    
+    try {
+      // Call backend logout endpoint to clear session
+      await fetch('http://localhost:3000/logout', {
+        method: 'POST',
+        credentials: 'include', // Include cookies so backend can clear them
+      });
+    } catch (error) {
+      console.error('Logout request failed:', error);
+      // Continue with local cleanup even if backend call fails
+    }
+    
+    // Clear any localStorage items
     localStorage.removeItem("isLoggedIn");
-    navigate('/');
+    localStorage.clear(); // Clear all localStorage to be safe
+    
+    // Navigate to home with logout flag to prevent auth redirect loop
+    navigate('/', { state: { justLoggedOut: true } });
   };
 
   const handleScheduleClick = (schedule, index) => {
