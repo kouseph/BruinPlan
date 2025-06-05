@@ -90,27 +90,27 @@ body, #root {
 .selected-classes {
   margin: 40px 0;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: var(--border-radius-lg);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow-md);
 }
 
 .selected-classes h2 {
-  color: var(--white);
+  color: var(--black);
   font-size: 24px;
   margin-bottom: 20px;
 }
 
 .saving-indicator {
   font-size: 14px;
-  color: var(--light-yellow);
+  color: var(--dark-yellow);
   font-weight: 400;
   opacity: 0.8;
 }
 
 .saving-indicator-dashboard {
-  color: var(--light-yellow);
+  color: var(--dark-yellow);
   font-size: 14px;
   margin: 15px 0;
   text-align: center;
@@ -129,13 +129,14 @@ body, #root {
   justify-content: space-between;
   align-items: flex-start;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.8);
   border-radius: var(--border-radius-md);
   transition: all var(--transition-fast);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .selected-course-item:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
   transform: translateX(5px);
 }
 
@@ -145,7 +146,7 @@ body, #root {
 }
 
 .course-title {
-  color: var(--light-yellow);
+  color: var(--dark-yellow);
   font-weight: 600;
   margin-bottom: 8px;
 }
@@ -154,7 +155,7 @@ body, #root {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: var(--white);
+  color: var(--black);
   font-size: 14px;
   margin-bottom: 8px;
 }
@@ -164,24 +165,25 @@ body, #root {
 }
 
 .discussions-label {
-  color: var(--light-yellow);
+  color: var(--dark-yellow);
   font-size: 14px;
   margin-bottom: 4px;
 }
 
 .discussion-item {
-  color: var(--white);
+  color: var(--black);
   font-size: 13px;
   padding: 4px 8px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.6);
   border-radius: var(--border-radius-sm);
   margin-bottom: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .remove-course-btn {
   background: none;
   border: none;
-  color: var(--light-yellow);
+  color: #ff4444;
   font-size: 24px;
   cursor: pointer;
   padding: 0 8px;
@@ -189,11 +191,11 @@ body, #root {
 }
 
 .remove-course-btn:hover {
-  color: #ff4444;
+  color: #cc0000;
 }
 
 .no-courses-message {
-  color: var(--white);
+  color: var(--black);
   font-style: italic;
   text-align: center;
   padding: 20px;

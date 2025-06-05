@@ -205,6 +205,12 @@ const CourseSearch = ({ onCoursesChange }) => {
           flex: 1;
         }
 
+        .course-content p {
+          color: #000;
+          margin: 5px 0;
+          font-size: 14px;
+        }
+
         .course-footer {
           margin-top: 15px;
           padding-top: 15px;
@@ -286,9 +292,21 @@ const CourseSearch = ({ onCoursesChange }) => {
           border-left: 2px solid #eee;
         }
         
+        .discussions h4 {
+          color: #000;
+          margin-bottom: 8px;
+          font-size: 14px;
+        }
+        
         .discussion-item {
           margin-bottom: 10px;
           padding: 5px 0;
+        }
+
+        .discussion-item p {
+          color: #000;
+          margin: 2px 0;
+          font-size: 13px;
         }
         
         .course-header {

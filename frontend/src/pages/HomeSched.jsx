@@ -30,7 +30,7 @@ export default function HomeSched() {
       
       // Set the first schedule as current
       if (state.schedules.length > 0) {
-        setCurrentSchedule(state.schedules[0].schedule || []);
+        setCurrentSchedule(state.schedules[0] || []);
       }
     } else {
       // If no schedule data, redirect back to home
@@ -41,7 +41,7 @@ export default function HomeSched() {
 
   const handleScheduleChange = (index) => {
     setCurrentScheduleIndex(index);
-    setCurrentSchedule(schedules[index].schedule || []);
+    setCurrentSchedule(schedules[index] || []);
   };
 
   const handleSaveClick = async () => {
@@ -136,9 +136,6 @@ export default function HomeSched() {
                 onClick={() => handleScheduleChange(index)}
               >
                 Option {index + 1}
-                {schedule.totalGapHours !== undefined && (
-                  <span className="gap-info">({schedule.totalGapHours.toFixed(1)}h gaps)</span>
-                )}
               </button>
             ))}
           </div>
@@ -240,9 +237,6 @@ export default function HomeSched() {
 
       {/* Action Buttons */}
       <div className="action-buttons">
-        <button className="back-button" onClick={handleBackToPlanning}>
-          ← Back to Planning
-        </button>
         <button className="schedules-save-button" onClick={handleSaveClick}>
           SAVE SCHEDULE
         </button>
