@@ -19,7 +19,16 @@ function parseTimeRange(timeStr) {
 
 function hasConflict(a, b) {
   if (!a.timeValid || !b.timeValid) return false;
-  return a.day === b.day && !(a.end <= b.start || b.end <= a.start);
+  
+  // Split multiple days like "Tuesday, Thursday"
+  const aDays = a.day.split(",").map((d) => d.trim());
+  const bDays = b.day.split(",").map((d) => d.trim());
+  
+  // Check if any days overlap
+  const hasCommonDay = aDays.some(dayA => bDays.includes(dayA));
+  
+  // If they share a common day, check for time overlap
+  return hasCommonDay && !(a.end <= b.start || b.end <= a.start);
 }
 
 function finalExamConflict(exams) {
@@ -249,119 +258,198 @@ function findAllOptimizedSchedules(courses) {
 
 const courses = [
   {
-    _id: { $oid: "682fad62516c94b923cca52f" },
-    course: "M107 - Cultural History of Rap",
-    day: "Tuesday, Thursday",
-    discussions: [
+    "_id": "682fb71d516c94b923ccb331",
+    "course": "35L - Software Construction",
+    "day": "Tuesday, Thursday",
+    "discussions": [
       {
-        day: "Friday",
-        instructor: "Dago-Clark, K.J.",
-        section: "Dis 1A",
-        time: "3pm-3:50pm",
-        _id: { $oid: "682fad62516c94b923cca530" },
+        "day": "Friday",
+        "instructor": "Elamri, O.",
+        "section": "Dis 1A",
+        "time": "10am-11:50am",
+        "_id": "682fb71d516c94b923ccb332"
       },
       {
-        day: "Friday",
-        instructor: "Dago-Clark, K.J.",
-        section: "Dis 1B",
-        time: "4pm-4:50pm",
-        _id: { $oid: "682fad62516c94b923cca531" },
+        "day": "Friday",
+        "instructor": "Wan, E.",
+        "section": "Dis 1B",
+        "time": "10am-11:50am",
+        "_id": "682fb71d516c94b923ccb333"
       },
       {
-        day: "Thursday",
-        instructor: "Hundley, R.M.",
-        section: "Dis 1C",
-        time: "1pm-1:50pm",
-        _id: { $oid: "682fad62516c94b923cca532" },
+        "day": "Friday",
+        "instructor": "Suresh, N.",
+        "section": "Dis 1C",
+        "time": "12pm-1:50pm",
+        "_id": "682fb71d516c94b923ccb334"
       },
       {
-        day: "Thursday",
-        instructor: "Hundley, R.M.",
-        section: "Dis 1D",
-        time: "2pm-2:50pm",
-        _id: { $oid: "682fad62516c94b923cca533" },
-      },
+        "day": "Friday",
+        "instructor": "Ji, K.",
+        "section": "Dis 1D",
+        "time": "2pm-3:50pm",
+        "_id": "682fb71d516c94b923ccb335"
+      }
     ],
-    instructor: "Keyes, C.L.",
-    section: "Lec 1",
-    sectionLink:
-      "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=AF%20AMER&crs_catlg_no=0107%20%20M%20&class_id=413342200&class_no=%20001%20%20",
-    time: "11am-12:50pm",
-    finalExam: {
-      date: "June 11, 2025",
-      day: "Wednesday",
-      note: "Check back on 05/26/2025 (Monday of 9th week) for final exam location",
-      time: "8am-11am",
-      _id: { $oid: "682fad62516c94b923cca534" },
+    "instructor": "Eggert, P.R.",
+    "section": "Lec 1",
+    "sectionLink": "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=COM%20SCI&crs_catlg_no=0035L%20%20%20&class_id=187105200&class_no=%20001%20%20",
+    "time": "4pm-5:50pm",
+    "finalExam": {
+      "date": "June 9, 2025",
+      "day": "Monday",
+      "note": "Check back on 05/26/2025 (Monday of 9th week) for final exam location",
+      "time": "6:30pm-9:30pm",
+      "_id": "682fb71d516c94b923ccb336"
     },
-    __v: { $numberInt: "0" },
+    "__v": 0
+  },
+    {
+    "_id": "682fb71d516c94b923ccb32a",
+    "course": "33 - Introduction to Computer Organization",
+    "day": "Tuesday, Thursday",
+    "discussions": [
+      {
+        "day": "Friday",
+        "instructor": "Alandary, S.",
+        "section": "Dis 1A",
+        "time": "10am-11:50am",
+        "_id": "682fb71d516c94b923ccb32b"
+      },
+      {
+        "day": "Friday",
+        "instructor": "Xu, Z.",
+        "section": "Dis 1B",
+        "time": "10am-11:50am",
+        "_id": "682fb71d516c94b923ccb32c"
+      },
+      {
+        "day": "Friday",
+        "instructor": "Tecot, L.",
+        "section": "Dis 1C",
+        "time": "12pm-1:50pm",
+        "_id": "682fb71d516c94b923ccb32d"
+      },
+      {
+        "day": "Friday",
+        "instructor": "Korb, A.L.",
+        "section": "Dis 1D",
+        "time": "12pm-1:50pm",
+        "_id": "682fb71d516c94b923ccb32e"
+      },
+      {
+        "day": "Friday",
+        "instructor": "Kupsh, D.M.",
+        "section": "Dis 1E",
+        "time": "2pm-3:50pm",
+        "_id": "682fb71d516c94b923ccb32f"
+      }
+    ],
+    "instructor": "Batista, S.",
+    "section": "Lec 1",
+    "sectionLink": "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=COM%20SCI&crs_catlg_no=0033%20%20%20%20&class_id=187101200&class_no=%20001%20%20",
+    "time": "2pm-3:50pm",
+    "finalExam": {
+      "date": "June 11, 2025",
+      "day": "Wednesday",
+      "note": "Check back on 05/26/2025 (Monday of 9th week) for final exam location",
+      "time": "11:30am-2:30pm",
+      "_id": "682fb71d516c94b923ccb330"
+    },
+    "__v": 0
   },
   {
-    _id: { $oid: "682fad62516c94b923cca55c" },
-    course:
-      "188A - Special Courses in African American Studies: Black Feminist Ethnography",
-    day: "Wednesday",
-    discussions: [
+    "_id": "683d0b2955ef19713d263c18",
+    "course": "120B - Sensation and Perception",
+    "day": "Tuesday, Thursday",
+    "discussions": [
       {
-        day: "Tuesday",
-        instructor: "Tesfai, M.G.",
-        section: "Dis 2A",
-        time: "4pm-4:50pm",
-        _id: { $oid: "682fad62516c94b923cca55d" },
+        "day": "Tuesday",
+        "instructor": "Kamper, D.G.",
+        "section": "Dis 1A",
+        "time": "3pm-3:50pm",
+        "_id": "683d0b2955ef19713d263c19"
       },
       {
-        day: "Wednesday",
-        instructor: "Tesfai, M.G.",
-        section: "Dis 2B",
-        time: "4pm-4:50pm",
-        _id: { $oid: "682fad62516c94b923cca55e" },
+        "day": "Tuesday",
+        "instructor": "Kamper, D.G.",
+        "section": "Dis 1B",
+        "time": "4pm-4:50pm",
+        "_id": "683d0b2955ef19713d263c1a"
       },
       {
-        day: "Thursday",
-        instructor: "Tesfai, M.G.",
-        section: "Dis 2C",
-        time: "2pm-2:50pm",
-        _id: { $oid: "682fad62516c94b923cca55f" },
+        "day": "Wednesday",
+        "instructor": "Zhao, Y.",
+        "section": "Dis 1C",
+        "time": "8am-8:50am",
+        "_id": "683d0b2955ef19713d263c1b"
       },
+      {
+        "day": "Wednesday",
+        "instructor": "Zhao, Y.",
+        "section": "Dis 1D",
+        "time": "9am-9:50am",
+        "_id": "683d0b2955ef19713d263c1c"
+      },
+      {
+        "day": "Thursday",
+        "instructor": "Zhao, Y.",
+        "section": "Dis 1E",
+        "time": "3pm-3:50pm",
+        "_id": "683d0b2955ef19713d263c1d"
+      },
+      {
+        "day": "Thursday",
+        "instructor": "Zhao, Y.",
+        "section": "Dis 1F",
+        "time": "4pm-4:50pm",
+        "_id": "683d0b2955ef19713d263c1e"
+      },
+      {
+        "day": "Friday",
+        "instructor": "Moon, D.",
+        "section": "Dis 1G",
+        "time": "10am-10:50am",
+        "_id": "683d0b2955ef19713d263c1f"
+      },
+      {
+        "day": "Friday",
+        "instructor": "Moon, D.",
+        "section": "Dis 1H",
+        "time": "11am-11:50am",
+        "_id": "683d0b2955ef19713d263c20"
+      }
     ],
-    instructor: "Edu, U.F.\nTesfai, M.G.",
-    section: "Lec 2",
-    sectionLink:
-      "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=AF%20AMER&crs_catlg_no=0188A%20%20%20&class_id=413828300&class_no=%20002%20%20",
-    time: "11am-1:50pm",
-    finalExam: {
-      date: "None listed",
-      day: "---",
-      note: "---",
-      time: "Consult instructor for method of evaluation",
-      _id: { $oid: "682fad62516c94b923cca560" },
+    "instructor": "Shams, L.",
+    "section": "Lec 1",
+    "sectionLink": "https://sa.ucla.edu/ro/Public/SOC/Results/ClassDetail?term_cd=25S&subj_area_cd=PSYCH%20%20&crs_catlg_no=0120B%20%20%20&class_id=328450200&class_no=%20001%20%20",
+    "time": "8am-9:15am",
+    "finalExam": {
+      "date": "None listed",
+      "day": "---",
+      "note": "---",
+      "time": "Consult instructor for method of evaluation",
+      "_id": "683d0b2955ef19713d263c21"
     },
-    __v: { $numberInt: "0" },
-  },
-  {
-    course: "20C - Team and Leadership Fundamentals",
-    day: "Friday",
-    discussions: [],
-    instructor: "Malone, M.B.",
-    section: "Lec 1",
-    time: "1pm-1:50pm",
+    "__v": 0
   },
 ];
 
 const allValidSortedSchedules = findAllOptimizedSchedules(courses);
+console.log(allValidSortedSchedules.length);
 
-// To preview all of them nicely
-if (allValidSortedSchedules.length === 0) {
-  console.log(
-    "❌ No valid schedule: lectures, discussions, or final exams conflict."
-  );
-} else {
-  allValidSortedSchedules.forEach((schedule, idx) => {
-    console.log(
-      `\n🔢 Schedule #${idx + 1} (Total Gap: ${calculateTotalGap(
-        schedule
-      )} hrs):`
-    );
-    prettyPrint(schedule);
-  });
-}
+// // To preview all of them nicely
+// if (allValidSortedSchedules.length === 0) {
+//   console.log(
+//     "❌ No valid schedule: lectures, discussions, or final exams conflict."
+//   );
+// } else {
+//   allValidSortedSchedules.forEach((schedule, idx) => {
+//     console.log(
+//       `\n🔢 Schedule #${idx + 1} (Total Gap: ${calculateTotalGap(
+//         schedule
+//       )} hrs):`
+//     );
+//     prettyPrint(schedule);
+//   });
+// }
