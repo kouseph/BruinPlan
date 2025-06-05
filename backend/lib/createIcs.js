@@ -94,6 +94,21 @@ function untilUTC(date) {
   )}${z(utc.getUTCMinutes())}${z(utc.getUTCSeconds())}Z`;
 }
 
+/* ================= Helper: format RRULE ======================= */
+function formatRRule(rruleObj) {
+  const parts = [`FREQ=${rruleObj.freq.toUpperCase()}`];
+  
+  if (rruleObj.byday && rruleObj.byday.length > 0) {
+    parts.push(`BYDAY=${rruleObj.byday.join(',')}`);
+  }
+  
+  if (rruleObj.until) {
+    parts.push(`UNTIL=${untilUTC(rruleObj.until)}`);
+  }
+  
+  return parts.join(';');
+}
+
 /* ================= Helper: event builder ======================= */
 function buildEvents({ title, byDays, timeObj, location, instructor }) {
   const events = [];
@@ -121,9 +136,19 @@ function buildEvents({ title, byDays, timeObj, location, instructor }) {
       status: 'CONFIRMED',
       start: startArr,
       end: endArr,
-      location,
-      description: `Instructor: ${instructor}`,
-      rrule: `FREQ=WEEKLY;BYDAY=${byDay};UNTIL=${untilUTC(TERM_END)}`
+      location: location || '',
+      description: `Instructor: ${instructor || 'TBA'}`,
+      calName: 'BruinPlan Schedule',
+      busyStatus: 'BUSY',
+      productId: '-//BruinPlan//EN',
+      method: 'PUBLISH',
+      sequence: 0,
+      transparency: 'OPAQUE',
+      rrule: formatRRule({
+        freq: 'WEEKLY',
+        byday: [byDay],
+        until: TERM_END
+      })
     });
   }
   return events;
@@ -191,7 +216,17 @@ export async function createIcs({ googleId, scheduleIndex = 0 }) {
   }
 
   /* 4. generate ics text */
-  const { error, value } = createEvents(events);
+  const { error, value } = createEvents({
+    events,
+    calendarMethod: 'PUBLISH',
+    productId: '-//BruinPlan//EN',
+    timezone: 'America/Los_Angeles',
+    title: 'BruinPlan Schedule',
+    description: 'Class schedule exported from BruinPlan',
+    scale: 'GREGORIAN',
+    version: '2.0'
+  });
+  
   if (error) throw error;
   return value; // raw .ics string
 }

@@ -2,10 +2,30 @@ import React from 'react';
 import MiniSchedule from './MiniSchedule';
 import './ScheduleModal.css';
 
-export default function ScheduleModal({ schedule, onClose }) {
+export default function ScheduleModal({ schedule, onClose, googleId, scheduleIndex = 0 }) {
   const handleModalClick = (e) => {
-    // Prevent clicks inside the schedule from closing the modal
-    e.stopPropagation();
+    e.stopPropagation(); // Prevent modal from closing on internal click
+  };
+
+  const handleExportClick = async () => {
+    try {
+      const res = await fetch(`/api/ics?googleId=${googleId}&scheduleIndex=${scheduleIndex}`);
+      if (!res.ok) throw new Error('Failed to generate calendar');
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'schedule.ics';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed:', err);
+      alert('Failed to export calendar. Please try again.');
+    }
   };
 
   return (
@@ -14,7 +34,10 @@ export default function ScheduleModal({ schedule, onClose }) {
         <div className="full-schedule">
           <MiniSchedule schedule={schedule} />
         </div>
+        <button className="export-button" onClick={handleExportClick}>
+          Export Calendar (.ics)
+        </button>
       </div>
     </div>
   );
-} 
+}
