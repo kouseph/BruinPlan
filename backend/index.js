@@ -7,6 +7,7 @@ import config from './config/env.js';
 import authRoutes from './routes/auth.routes.js';
 import scheduleRoutes from './routes/schedule.routes.js';
 import userRoutes from './routes/user.routes.js';
+import classes from './routes/course.routes.js'
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.get('/', (req, res) => {
 app.use(authRoutes);
 app.use(userRoutes);
 app.use(scheduleRoutes);
+app.use('/api/courses', classes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

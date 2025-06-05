@@ -36,6 +36,7 @@ router.post('/api/schedule/optimize', isAuthenticated, async (req, res) => {
     }
 
     const result = await generateSchedules(courses);
+    console.log(result.length);
     res.json(result);
   } catch (error) {
     res.status(500).json({ 

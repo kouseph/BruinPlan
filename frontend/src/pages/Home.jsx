@@ -1,14 +1,66 @@
 // src/pages/Home.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import CourseSearch from "../components/CourseSearch.js";
 import "../App.css";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [selectedCoursesData, setSelectedCoursesData] = useState([]);
+  const [isGeneratingSchedule, setIsGeneratingSchedule] = useState(false);
 
   function onClickLogin() {
     navigate("/login");
   }
+
+  const handleCoursesChange = (coursesData) => {
+    setSelectedCoursesData(coursesData);
+  };
+
+  const handlePlanClick = async (e) => {
+    e.preventDefault();
+    
+    if (selectedCoursesData.length === 0) {
+      return;
+    }
+
+    try {
+      setIsGeneratingSchedule(true);
+      
+      // Send courses to schedule generation API (test endpoint since user might not be logged in)
+      const response = await fetch('http://localhost:3000/api/schedule/test', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          courses: selectedCoursesData
+        })
+      });
+
+      const result = await response.json();
+      
+      console.log('Schedule generation result:', result);
+
+      if (response.ok && result.success) {
+        // Navigate to schedule view with the generated schedules
+        navigate('/homesched', { 
+          state: { 
+            schedules: result.schedules,
+            selectedCourses: selectedCoursesData,
+            from: 'home'
+          }
+        });
+      } else {
+        alert(`Failed to generate schedule: ${result.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error generating schedule:', error);
+      alert('Failed to generate schedule. Please try again.');
+    } finally {
+      setIsGeneratingSchedule(false);
+    }
+  };
 
   return (
     <div className="container">
@@ -22,28 +74,15 @@ export default function Home() {
         LOG IN
       </button>
 
-      <div className="input-group">
-        <input type="text" placeholder="Enter Subject Area" />
-        <input type="text" placeholder="Enter Class Title" />
-      </div>
+      <CourseSearch onCoursesChange={handleCoursesChange} />
 
-      <div className="selected-classes">
-        <h2>Selected Classes</h2>
-        <table>
-          <tbody>
-            {[...Array(4)].map((_, idx) => (
-              <tr key={idx}>
-                <td></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* “PLAN” button links to "/homesched" */}
-      <Link to="/homesched" style={{ textDecoration: "none" }}>
-        <button className="plan-button">PLAN</button>
-      </Link>
+      <button 
+        className={`plan-button ${selectedCoursesData.length === 0 || isGeneratingSchedule ? 'disabled' : ''}`}
+        onClick={handlePlanClick}
+        disabled={selectedCoursesData.length === 0 || isGeneratingSchedule}
+      >
+        {isGeneratingSchedule ? 'GENERATING...' : 'PLAN'}
+      </button>
     </div>
   );
 }
