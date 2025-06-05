@@ -436,7 +436,7 @@ const courses = [
 ];
 
 const allValidSortedSchedules = findAllOptimizedSchedules(courses);
-console.log(allValidSortedSchedules[0]);
+// console.log(allValidSortedSchedules[0]);
 
 // // To preview all of them nicely
 // if (allValidSortedSchedules.length === 0) {

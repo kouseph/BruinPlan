@@ -59,6 +59,7 @@ const sampleSchedule = [
 export default function Profile() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userSchedules, setUserSchedules] = useState([]);
+  const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(null);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
   const [user, setUser] = useState(null);
   const dropdownRef = useRef(null);
