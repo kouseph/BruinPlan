@@ -262,15 +262,22 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Empty Schedule Message */
+/* Empty Schedule Message - Overlay */
 .empty-schedule-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
   color: var(--white);
-  margin-top: 50px;
   padding: 40px;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.8);
   border-radius: var(--border-radius-lg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
+  z-index: 100;
+  min-width: 400px;
+  border: 2px solid var(--grey);
+  box-shadow: var(--shadow-lg);
 }
 
 .empty-schedule-message h3 {

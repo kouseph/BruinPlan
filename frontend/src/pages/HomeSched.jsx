@@ -165,19 +165,19 @@ export default function HomeSched() {
     }
   };
 
-  // Show loading if no schedule data yet
-  if (schedules.length === 0) {
-    return (
-      <div className="schedules-container">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <h1 className="schedules-title">BruinPlan</h1>
-        </Link>
-        <div className="loading-message">
-          Loading your schedule...
-        </div>
-      </div>
-    );
-  }
+  // // Show loading if no schedule data yet
+  // if (schedules.length === 0) {
+  //   return (
+  //     <div className="schedules-container">
+  //       <Link to="/" style={{ textDecoration: 'none' }}>
+  //         <h1 className="schedules-title">BruinPlan</h1>
+  //       </Link>
+  //       <div className="loading-message">
+  //         Loading your schedule...
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="schedules-container">
@@ -330,6 +330,17 @@ export default function HomeSched() {
             );
           });
         }).flat()}
+
+        {/* Empty Schedule Message - Now inside the grid for overlay */}
+        {currentSchedule.length === 0 && (
+          <div className="empty-schedule-message">
+            <h3>No valid schedule could be generated</h3>
+            <p>There may be time conflicts between your selected courses.</p>
+            <button className="back-button" onClick={handleBackToPlanning}>
+              ← Try Different Courses
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Action Buttons */}
@@ -338,17 +349,6 @@ export default function HomeSched() {
           SAVE SCHEDULE
         </button>
       </div>
-
-      {/* Empty Schedule Message */}
-      {currentSchedule.length === 0 && (
-        <div className="empty-schedule-message">
-          <h3>No valid schedule could be generated</h3>
-          <p>There may be time conflicts between your selected courses.</p>
-          <button className="back-button" onClick={handleBackToPlanning}>
-            ← Try Different Courses
-          </button>
-        </div>
-      )}
     </div>
   );
 }
