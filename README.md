@@ -230,7 +230,7 @@ The heart of BruinPlan is the `findSchedule.js` algorithm that:
 3. **Session Management**: Secure session cookies with logout cleanup
 4. **Guest Experience**: Full functionality without requiring login
 
-## ⚡ Performance Features
+## Performance Features
 
 - **Debounced Auto-Save**: Prevents excessive API calls when selecting courses
 - **Optimized Algorithms**: Efficient schedule generation with early termination
