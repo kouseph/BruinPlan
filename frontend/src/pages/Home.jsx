@@ -42,11 +42,11 @@ export default function Home() {
       
       console.log('Schedule generation result:', result);
 
-      if (response.ok && result.success) {
+      if (response.ok) {
         // Navigate to schedule view with the generated schedules
         navigate('/homesched', { 
           state: { 
-            schedules: result.schedules,
+            schedules: result,
             selectedCourses: selectedCoursesData,
             from: 'home'
           }

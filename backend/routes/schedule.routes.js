@@ -1,5 +1,6 @@
 import express from 'express';
-import { generateSchedules, saveOptimizedSchedule } from '../services/schedule.service.js';
+import { findAllOptimizedSchedules } from '../scripts/findSchedule.js';
+// import { generateSchedules, saveOptimizedSchedule, findAllOptimizedSchedules } from '../services/schedule.service.js';
 import { deleteUserSchedule } from '../services/user.service.js';
 import { isAuthenticated } from '../components/auth.middleware.js';
 import User from '../models/user.js';
@@ -10,12 +11,14 @@ const router = express.Router();
 router.post('/api/schedule/test', async (req, res) => {
   try {
     const { courses } = req.body;
+    console.log("this is the backend api log",courses);
 
     if (!Array.isArray(courses)) {
       return res.status(400).json({ message: 'Courses must be an array' });
     }
 
-    const result = await generateSchedules(courses);
+    const result = await findAllOptimizedSchedules(courses);
+    console.log(result)
     res.json(result);
   } catch (error) {
     res.status(500).json({ 
@@ -36,7 +39,7 @@ router.post('/api/schedule/optimize', isAuthenticated, async (req, res) => {
     }
 
     const result = await generateSchedules(courses);
-    console.log(result.length);
+    console.log("this is the backend api log",result.length);
     res.json(result);
   } catch (error) {
     res.status(500).json({ 
