@@ -1,5 +1,5 @@
 // src/pages/HomeSched.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import './HomeSched.css';
 
@@ -19,6 +19,18 @@ export default function HomeSched() {
   const [schedules, setSchedules] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [currentSchedule, setCurrentSchedule] = useState([]);
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+  const [showSavedToast, setShowSavedToast] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (showSavedToast) {
+      const timer = setTimeout(() => setShowSavedToast(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSavedToast]);
 
   useEffect(() => {
     // Get schedule data from navigation state
@@ -39,6 +51,18 @@ export default function HomeSched() {
     }
   }, [location.state, navigate]);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleScheduleChange = (index) => {
     setCurrentScheduleIndex(index);
     setCurrentSchedule(schedules[index] || []);
@@ -47,51 +71,89 @@ export default function HomeSched() {
   const handleSaveClick = async () => {
     // Check if we came from the dashboard (logged in) or home (not logged in)
     console.log('Location state:', location.state);
-    const isLoggedIn = location.state?.from === 'dashboard';
+    // const isLoggedIn = location.state?.from === 'dashboard';
     console.log('Is logged in?', isLoggedIn);
     
     if (!isLoggedIn) {
       console.log('Not logged in, redirecting to login');
       navigate('/login', { state: { showLoginRequired: true } });
     } else {
-      try {
-        console.log('Attempting to save schedule:', currentSchedule);
-        const response = await fetch('http://localhost:3000/api/schedules', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            schedule: currentSchedule
-          })
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Save successful:', data);
-          alert('Schedule saved successfully!');
-        } else {
-          let errorMessage;
-          try {
-            const errorData = await response.json();
-            errorMessage = errorData.message;
-          } catch (e) {
-            // If response is not JSON
-            errorMessage = await response.text();
-          }
-          console.error('Save failed:', {
-            status: response.status,
-            statusText: response.statusText,
-            error: errorMessage
-          });
-          alert(`Failed to save schedule: ${errorMessage || 'Unknown error'}`);
-        }
-      } catch (error) {
-        console.error('Network error:', error);
-        alert('Failed to save schedule. Please check your connection and try again.');
+      setShowSavedToast(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/schedules', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // 🔐 send cookies (required for sessions)
+        body: JSON.stringify({
+          schedule: currentSchedule, // replace with actual schedule data
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('✅ Schedule saved:', data);
+      } else {
+        console.error('❌ Error:', data.message);
       }
+    } catch (err) {
+      console.error('🚨 Network error:', err);
     }
+    //   try {
+    //     console.log('Attempting to save schedule:', currentSchedule);
+    //     const response = await fetch('http://localhost:3000/api/schedules', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json'
+    //       },
+    //       credentials: 'include',
+    //       body: JSON.stringify({
+    //         schedule: currentSchedule
+    //       })
+    //     });
+
+    //     if (response.ok) {
+    //       const data = await response.json();
+    //       console.log('Save successful:', data);
+    //       alert('Schedule saved successfully!');
+    //     } else {
+    //       let errorMessage;
+    //       try {
+    //         const errorData = await response.json();
+    //         errorMessage = errorData.message;
+    //       } catch (e) {
+    //         // If response is not JSON
+    //         errorMessage = await response.text();
+    //       }
+    //       console.error('Save failed:', {
+    //         status: response.status,
+    //         statusText: response.statusText,
+    //         error: errorMessage
+    //       });
+    //       alert(`Failed to save schedule: ${errorMessage || 'Unknown error'}`);
+    //     }
+    //   } catch (error) {
+    //     console.error('Network error:', error);
+    //     alert('Failed to save schedule. Please check your connection and try again.');
+    //   }
+    }
+  };
+
+  const handleProfileClick = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+
+  const goToSavedSchedules = () => {
+    setDropdownOpen(false);
+    navigate('/profile');
+  };
+
+  const handleSignOut = () => {
+    setDropdownOpen(false);
+    // (Optional) clear auth tokens or session here
+    navigate('/');
   };
 
   const handleBackToPlanning = () => {
@@ -123,6 +185,41 @@ export default function HomeSched() {
       <Link to="/" style={{ textDecoration: 'none' }}>
         <h1 className="schedules-title">BruinPlan</h1>
       </Link>
+
+      {isLoggedIn &&
+      <div className="profile-icon-wrapper" ref={dropdownRef}>
+        <img
+          className="schedules-profile-icon"
+          src="https://cdn-icons-png.flaticon.com/512/1946/1946429.png"
+          alt="Profile"
+          onClick={handleProfileClick}
+        />
+        {dropdownOpen && (
+          <div className="profile-popup-menu">
+            <button onClick={goToSavedSchedules}>Saved Schedules</button>
+            <button onClick={handleSignOut}>Sign Out</button>
+          </div>
+        )}
+      </div>}
+      {/* Toast notification (appears in top-right) */}
+      {showSavedToast && (
+        <div className="schedules-toast">
+          <span className="schedules-toast-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="12" fill="#4CAF50" />
+              <path
+                d="M9 12l2 2 4-4"
+                stroke="#fff"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span className="schedules-toast-text">Saved to profile</span>
+        </div>
+      )}
 
       {/* Schedule Selection */}
       {schedules.length > 1 && (

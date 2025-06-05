@@ -118,6 +118,7 @@ export default function Profile() {
 
   const handleSignOut = () => {
     setDropdownOpen(false);
+    localStorage.removeItem("isLoggedIn");
     navigate('/');
   };
 

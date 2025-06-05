@@ -65,7 +65,9 @@ export default function Dashboard() {
     setSelectedCoursesData(coursesData);
   };
 
-  const handlePlanClick = async () => {
+  const handlePlanClick = async (e) => {
+    e.preventDefault();
+    
     if (selectedCoursesData.length === 0) {
       return;
     }
@@ -73,13 +75,12 @@ export default function Dashboard() {
     try {
       setIsGeneratingSchedule(true);
       
-      // Use authenticated endpoint for logged-in users
-      const response = await fetch('http://localhost:3000/api/schedule/optimize', {
+      // Send courses to schedule generation API (test endpoint since user might not be logged in)
+      const response = await fetch('http://localhost:3000/api/schedule/test', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
         body: JSON.stringify({
           courses: selectedCoursesData
         })
@@ -89,13 +90,13 @@ export default function Dashboard() {
       
       console.log('Schedule generation result:', result);
 
-      if (response.ok && result.success) {
+      if (response.ok) {
         // Navigate to schedule view with the generated schedules
-        navigate('/schedules', { 
+        navigate('/homesched', { 
           state: { 
-            schedules: result.schedules,
+            schedules: result,
             selectedCourses: selectedCoursesData,
-            from: 'dashboard'
+            from: 'home'
           }
         });
       } else {
@@ -108,6 +109,8 @@ export default function Dashboard() {
       setIsGeneratingSchedule(false);
     }
   };
+
+  localStorage.setItem("isLoggedIn", "true");
 
   return (
     <div className="container">
