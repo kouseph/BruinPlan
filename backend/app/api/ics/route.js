@@ -27,10 +27,13 @@ export async function GET(request) {
     return new NextResponse(icsText, {
       status: 200,
       headers: {
-        'Content-Type':        'text/calendar; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="schedule.ics"'
+        'Content-Type': 'text/calendar; charset=utf-8',
+        'Content-Disposition': 'attachment; filename="bruinplan-schedule.ics"',
+        'Cache-Control': 'no-cache',
+        'Content-Length': Buffer.byteLength(icsText, 'utf-8').toString()
       }
     });
+    
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: err.message }, { status: 500 });
