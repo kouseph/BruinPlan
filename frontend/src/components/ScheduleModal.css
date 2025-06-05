@@ -83,8 +83,6 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 20px;
-  align-self: center;
   transition: background-color 0.3s ease;
 }
 
@@ -92,8 +90,31 @@
   background-color: #e6c200;
 }
 
+.delete-button {
+  background-color: #dc3545; /* Red */
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
 .schedule-modal-content {
   display: flex;
   flex-direction: column;
-  align-items: center; /* center button horizontally */
+  align-items: center; /* center buttons horizontally */
 }

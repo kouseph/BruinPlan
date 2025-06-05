@@ -28,15 +28,26 @@ export default function ScheduleModal({ schedule, onClose, googleId, scheduleInd
     }
   };
 
+  const handleDeleteClick = () => {
+    // Add your delete functionality here
+    console.log('Delete button clicked');
+    alert('Delete functionality to be implemented');
+  };
+
   return (
     <div className="schedule-modal-overlay" onClick={onClose}>
       <div className="schedule-modal-content" onClick={handleModalClick}>
         <div className="full-schedule">
           <MiniSchedule schedule={schedule} />
         </div>
-        <button className="export-button" onClick={handleExportClick}>
-          Export Calendar (.ics)
-        </button>
+        <div className="modal-buttons">
+          <button className="export-button" onClick={handleExportClick}>
+            Export Calendar (.ics)
+          </button>
+          <button className="delete-button" onClick={handleDeleteClick}>
+            Delete Schedule
+          </button>
+        </div>
       </div>
     </div>
   );
