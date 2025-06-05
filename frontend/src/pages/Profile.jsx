@@ -60,6 +60,7 @@ export default function Profile() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [userSchedules, setUserSchedules] = useState([]);
   const [selectedSchedule, setSelectedSchedule] = useState(null);
+  const [selectedScheduleIndex, setSelectedScheduleIndex] = useState(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -122,14 +123,16 @@ export default function Profile() {
     navigate('/');
   };
 
-  const handleScheduleClick = (schedule) => {
+  const handleScheduleClick = (schedule, index) => {
     if (schedule) {  // Only open modal for actual schedules, not the empty card
       setSelectedSchedule(schedule);
+      setSelectedScheduleIndex(index);
     }
   };
 
   const handleCloseModal = () => {
     setSelectedSchedule(null);
+    setSelectedScheduleIndex(null);
   };
 
   // Create array of all schedules plus one empty slot
@@ -165,7 +168,7 @@ export default function Profile() {
             <div 
               key={index} 
               className={`profile-card ${!schedule ? 'profile-card-empty' : ''}`}
-              onClick={() => handleScheduleClick(schedule)}
+              onClick={() => handleScheduleClick(schedule, index)}
             >
               {schedule ? (
                 <MiniSchedule schedule={schedule} />
@@ -183,6 +186,7 @@ export default function Profile() {
         <ScheduleModal
           schedule={selectedSchedule}
           onClose={handleCloseModal}
+          scheduleIndex={selectedScheduleIndex}
         />
       )}
     </div>
