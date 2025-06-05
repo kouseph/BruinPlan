@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import course from 'backend/models/course.js';
 import User from 'backend/models/user.js';
+import Course from 'backend/models/course.js';
 
 // Spring 2025 Term
 const TERM_START = new Date('2025-03-31');
@@ -29,7 +29,6 @@ function parseByDay(dayStr = '') {
     .filter(Boolean);
 }
 
-// Parse time like "2:00pm-3:15pm" into start and end times
 function parseTimeRange(timeStr = '') {
   timeStr = timeStr.trim();
   if (timeStr === '(No time)' || !timeStr) return null;
@@ -51,14 +50,12 @@ function parseTimeRange(timeStr = '') {
   return { start: to24(startStr), end: to24(endStr ?? startStr) };
 }
 
-// Find the first date in the term that matches a weekday
 function firstClassDateForWeekday(weekday) {
   const d = new Date(TERM_START);
   while (d.getDay() !== weekday) d.setDate(d.getDate() + 1);
   return new Date(d);
 }
 
-// Convert JS date to UTC timestamp for RRULE UNTIL
 function untilUTC(date) {
   const z = n => String(n).padStart(2, '0');
   const utc = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59));
@@ -69,20 +66,22 @@ function untilUTC(date) {
 
 function formatRRule(rruleObj) {
   const parts = [`FREQ=${rruleObj.freq.toUpperCase()}`];
-  if (rruleObj.byday && rruleObj.byday.length > 0) {
-    parts.push(`BYDAY=${rruleObj.byday.join(',')}`);
-  }
-  if (rruleObj.until) {
-    parts.push(`UNTIL=${untilUTC(rruleObj.until)}`);
-  }
+  if (rruleObj.byday?.length > 0) parts.push(`BYDAY=${rruleObj.byday.join(',')}`);
+  if (rruleObj.until) parts.push(`UNTIL=${untilUTC(rruleObj.until)}`);
   return parts.join(';');
 }
 
-// Convert date array [Y,M,D,H,M] to UTC format string for DTSTART/DTEND
-function toUTCString(arr) {
-  const [y, m, d, h, min] = arr;
+function toUTCString([y, m, d, h, min]) {
   const utcDate = new Date(Date.UTC(y, m - 1, d, h, min, 0));
   return utcDate.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z/, 'Z');
+}
+
+function escapeText(text) {
+  if (!text) return '';
+  return text
+    .replace(/[\\;,]/g, '\\$&')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r');
 }
 
 function buildEvents({ title, byDays, timeObj, location, instructor }) {
@@ -122,20 +121,8 @@ function buildEvents({ title, byDays, timeObj, location, instructor }) {
   return events;
 }
 
-// Escape special characters in text fields
-function escapeText(text) {
-  if (!text) return '';
-  return text
-    .replace(/[\\;,]/g, '\\$&')
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r');
-}
-
 export async function createIcs({ googleId, scheduleIndex = 0 }) {
-  console.log('createIcs - Starting generation for:', { googleId, scheduleIndex });
-  
   if (mongoose.connection.readyState === 0) {
-    console.log('createIcs - Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGO_URI);
   }
 
@@ -143,39 +130,20 @@ export async function createIcs({ googleId, scheduleIndex = 0 }) {
     .populate('schedules.type.course')
     .lean();
 
-  if (!user) {
-    console.log('createIcs - User not found:', googleId);
-    throw new Error('User not found');
-  }
-
+  if (!user) throw new Error('User not found');
   const schedule = user.schedules?.[scheduleIndex];
-  if (!schedule || schedule.type.length === 0) {
-    console.log('createIcs - Schedule not found or empty:', { scheduleIndex, hasSchedule: !!schedule });
-    throw new Error('Schedule empty / not found');
-  }
+  if (!schedule || schedule.type.length === 0) throw new Error('Schedule empty / not found');
 
-  console.log('createIcs - Building events for schedule with', schedule.type.length, 'courses');
   const events = [];
 
   for (const entry of schedule.type) {
     const course = entry.course;
     const discIdx = entry.discussion;
 
-    console.log('createIcs - Processing course:', {
-      course: course.course,
-      section: course.section,
-      day: course.day,
-      time: course.time
-    });
-
     const byDaysLec = parseByDay(course.day);
     const timeLec = parseTimeRange(course.time);
 
     if (byDaysLec && timeLec) {
-      console.log('createIcs - Adding lecture:', {
-        days: byDaysLec,
-        time: timeLec
-      });
       events.push(
         ...buildEvents({
           title: `${course.course} Lec ${course.section}`,
@@ -193,10 +161,6 @@ export async function createIcs({ googleId, scheduleIndex = 0 }) {
       const timeDis = parseTimeRange(d.time);
 
       if (byDaysDis && timeDis) {
-        console.log('createIcs - Adding discussion:', {
-          days: byDaysDis,
-          time: timeDis
-        });
         events.push(
           ...buildEvents({
             title: `${course.course} Dis ${d.section}`,
@@ -210,9 +174,7 @@ export async function createIcs({ googleId, scheduleIndex = 0 }) {
     }
   }
 
-  console.log('createIcs - Generated', events.length, 'total events');
-
-  let icsContent = [
+  const icsLines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//BruinPlan//EN',
@@ -222,37 +184,24 @@ export async function createIcs({ googleId, scheduleIndex = 0 }) {
     'X-WR-TIMEZONE:UTC'
   ];
 
-  for (const event of events) {
-    const { start, end, title, location, description, rrule } = event;
-
-    icsContent.push(
+  for (const e of events) {
+    icsLines.push(
       'BEGIN:VEVENT',
-      `DTSTART:${toUTCString(start)}`,
-      `DTEND:${toUTCString(end)}`,
-      `SUMMARY:${escapeText(title)}`,
-      `LOCATION:${escapeText(location)}`,
-      `DESCRIPTION:${escapeText(description)}`,
-      'STATUS:CONFIRMED',
-      'TRANSP:OPAQUE',
-      `RRULE:${rrule}`,
-      `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z/, 'Z')}`,
+      `DTSTART:${toUTCString(e.start)}`,
+      `DTEND:${toUTCString(e.end)}`,
+      `SUMMARY:${escapeText(e.title)}`,
+      `LOCATION:${escapeText(e.location)}`,
+      `DESCRIPTION:${escapeText(e.description)}`,
+      `STATUS:CONFIRMED`,
+      `TRANSP:OPAQUE`,
+      `RRULE:${e.rrule}`,
+      `DTSTAMP:${toUTCString(new Date().toISOString().split(/[-T:]/).map(Number))}`,
       `UID:${Date.now()}-${Math.random().toString(36).substring(2)}@bruinplan.com`,
       'SEQUENCE:0',
       'END:VEVENT'
     );
   }
 
-  icsContent.push('END:VCALENDAR');
-
-  // Ensure proper line endings and add final newline
-  const finalContent = icsContent.join('\r\n') + '\r\n';
-  
-  // Validate content starts with BEGIN:VCALENDAR
-  if (!finalContent.startsWith('BEGIN:VCALENDAR')) {
-    console.error('createIcs - Invalid ICS format generated, content starts with:', finalContent.substring(0, 50));
-    throw new Error('Invalid ICS format generated');
-  }
-  
-  console.log('createIcs - Successfully generated ICS file of length:', finalContent.length);
-  return finalContent;
+  icsLines.push('END:VCALENDAR');
+  return icsLines.join('\r\n') + '\r\n';
 }
