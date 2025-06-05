@@ -140,9 +140,13 @@ export default function Profile() {
   };
 
   const handleScheduleClick = (schedule, index) => {
-    if (schedule) {  // Only open modal for actual schedules, not the empty card
+    if (schedule) {
+      // Open modal for actual schedules
       setSelectedSchedule(schedule);
       setSelectedScheduleIndex(index);
+    } else {
+      // Navigate to dashboard for "+ New Schedule" card
+      navigate('/dashboard');
     }
   };
 
