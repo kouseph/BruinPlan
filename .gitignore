@@ -2,3 +2,4 @@
 .env
 .deb
 node_modules/
+.vscode/
