@@ -436,20 +436,19 @@ const courses = [
 ];
 
 const allValidSortedSchedules = findAllOptimizedSchedules(courses);
-console.log(allValidSortedSchedules.length);
 
-// // To preview all of them nicely
-// if (allValidSortedSchedules.length === 0) {
-//   console.log(
-//     "❌ No valid schedule: lectures, discussions, or final exams conflict."
-//   );
-// } else {
-//   allValidSortedSchedules.forEach((schedule, idx) => {
-//     console.log(
-//       `\n🔢 Schedule #${idx + 1} (Total Gap: ${calculateTotalGap(
-//         schedule
-//       )} hrs):`
-//     );
-//     prettyPrint(schedule);
-//   });
-// }
+// To preview all of them nicely
+if (allValidSortedSchedules.length === 0) {
+  console.log(
+    "❌ No valid schedule: lectures, discussions, or final exams conflict."
+  );
+} else {
+  allValidSortedSchedules.forEach((schedule, idx) => {
+    console.log(
+      `\n🔢 Schedule #${idx + 1} (Total Gap: ${calculateTotalGap(
+        schedule
+      )} hrs):`
+    );
+    prettyPrint(schedule);
+  });
+}
